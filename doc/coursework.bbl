@@ -1,0 +1,206 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global}
+    \entry{data_base}{article}{}
+      \name{author}{1}{}{%
+        {{hash=25a784f8f599f989d4a521efe8fdfc94}{%
+           family={Карпова},
+           familyi={К\bibinitperiod},
+           given={И.\bibnamedelimi П.},
+           giveni={И\bibinitperiod\bibinitdelim П\bibinitperiod}}}%
+      }
+      \strng{namehash}{25a784f8f599f989d4a521efe8fdfc94}
+      \strng{fullhash}{25a784f8f599f989d4a521efe8fdfc94}
+      \strng{bibnamehash}{25a784f8f599f989d4a521efe8fdfc94}
+      \strng{authorbibnamehash}{25a784f8f599f989d4a521efe8fdfc94}
+      \strng{authornamehash}{25a784f8f599f989d4a521efe8fdfc94}
+      \strng{authorfullhash}{25a784f8f599f989d4a521efe8fdfc94}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Базы данных. Курс лекций и материалов для практиечских заданий. Учебное пособие}
+      \field{year}{2013}
+      \field{pages}{7}
+      \range{pages}{1}
+    \endentry
+    \entry{dbms}{article}{}
+      \name{author}{1}{}{%
+        {{hash=021a46ecd046392ac9e0b88f398e223c}{%
+           family={Соколов},
+           familyi={С\bibinitperiod},
+           given={В.\bibnamedelimi А.},
+           giveni={В\bibinitperiod\bibinitdelim А\bibinitperiod}}}%
+      }
+      \strng{namehash}{021a46ecd046392ac9e0b88f398e223c}
+      \strng{fullhash}{021a46ecd046392ac9e0b88f398e223c}
+      \strng{bibnamehash}{021a46ecd046392ac9e0b88f398e223c}
+      \strng{authorbibnamehash}{021a46ecd046392ac9e0b88f398e223c}
+      \strng{authornamehash}{021a46ecd046392ac9e0b88f398e223c}
+      \strng{authorfullhash}{021a46ecd046392ac9e0b88f398e223c}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Экономика и социум}
+      \field{title}{Современные системы управления базами данных}
+      \field{year}{2017}
+      \field{number}{9}
+      \range{number}{1}
+    \endentry
+    \entry{music_for_youth}{article}{}
+      \name{author}{2}{}{%
+        {{hash=2ea301bd5f27246511b88ad0312ec7ed}{%
+           family={Воробьев},
+           familyi={В\bibinitperiod},
+           given={Ю.\bibnamedelimi Л.},
+           giveni={Ю\bibinitperiod\bibinitdelim Л\bibinitperiod}}}%
+        {{hash=80554c00c94e2279e63b6eb5e109b0c1}{%
+           family={Милорадова},
+           familyi={М\bibinitperiod},
+           given={И.\bibnamedelimi Н.},
+           giveni={И\bibinitperiod\bibinitdelim Н\bibinitperiod}}}%
+      }
+      \strng{namehash}{ff7ecd6591256a3ba8e5a87b64bf3633}
+      \strng{fullhash}{ff7ecd6591256a3ba8e5a87b64bf3633}
+      \strng{bibnamehash}{ff7ecd6591256a3ba8e5a87b64bf3633}
+      \strng{authorbibnamehash}{ff7ecd6591256a3ba8e5a87b64bf3633}
+      \strng{authornamehash}{ff7ecd6591256a3ba8e5a87b64bf3633}
+      \strng{authorfullhash}{ff7ecd6591256a3ba8e5a87b64bf3633}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Известия ТулГУ}
+      \field{title}{Влияние музыки на формирование личности в эпоху интернет}
+      \field{year}{2011}
+      \field{number}{1}
+      \range{number}{1}
+    \endentry
+    \entry{music_and_it}{article}{}
+      \name{author}{1}{}{%
+        {{hash=6d17d674183b21b72848a2dadc5f312b}{%
+           family={Катаев},
+           familyi={К\bibinitperiod},
+           given={П.\bibnamedelimi В.},
+           giveni={П\bibinitperiod\bibinitdelim В\bibinitperiod}}}%
+      }
+      \strng{namehash}{6d17d674183b21b72848a2dadc5f312b}
+      \strng{fullhash}{6d17d674183b21b72848a2dadc5f312b}
+      \strng{bibnamehash}{6d17d674183b21b72848a2dadc5f312b}
+      \strng{authorbibnamehash}{6d17d674183b21b72848a2dadc5f312b}
+      \strng{authornamehash}{6d17d674183b21b72848a2dadc5f312b}
+      \strng{authorfullhash}{6d17d674183b21b72848a2dadc5f312b}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Вестник Пермского Университета}
+      \field{title}{Музыкальные медиа в сетевом обществе: возможности и вызовы функционального многообразия}
+      \field{year}{2018}
+      \field{number}{1}
+      \range{number}{1}
+    \endentry
+    \entry{music_stat}{article}{}
+      \name{author}{2}{}{%
+        {{hash=8f6d959175cceeabc66e35a27192e140}{%
+           family={Кобцева},
+           familyi={К\bibinitperiod},
+           given={Е.А.},
+           giveni={Е\bibinitperiod}}}%
+        {{hash=dcb0ef9006805c1b3b9e07efa5c9a800}{%
+           family={Прокопец},
+           familyi={П\bibinitperiod},
+           given={Т.Н.},
+           giveni={Т\bibinitperiod}}}%
+      }
+      \strng{namehash}{1d7ca1f344a35bb59b411823cae52604}
+      \strng{fullhash}{1d7ca1f344a35bb59b411823cae52604}
+      \strng{bibnamehash}{1d7ca1f344a35bb59b411823cae52604}
+      \strng{authorbibnamehash}{1d7ca1f344a35bb59b411823cae52604}
+      \strng{authornamehash}{1d7ca1f344a35bb59b411823cae52604}
+      \strng{authorfullhash}{1d7ca1f344a35bb59b411823cae52604}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{РАЗВИТИЕ МУЗЫКАЛЬНОЙ ИНДУСТРИИ В РОССИИ И ЗА РУБЕЖОМ}
+    \endentry
+    \entry{strokovie_and_kolonochnie_bd}{article}{}
+      \name{author}{2}{}{%
+        {{hash=f31a85a3ec3ef12514ec70cbebc27444}{%
+           family={Григорьев},
+           familyi={Г\bibinitperiod},
+           given={Ю.\bibnamedelimi А.},
+           giveni={Ю\bibinitperiod\bibinitdelim А\bibinitperiod}}}%
+        {{hash=c9e83e9384d9c14f53b804473ab25322}{%
+           family={Ермаков},
+           familyi={Е\bibinitperiod},
+           given={Е.\bibnamedelimi Ю.},
+           giveni={Е\bibinitperiod\bibinitdelim Ю\bibinitperiod}}}%
+      }
+      \strng{namehash}{06e2e4d39b368cf95ea8be2716a9949d}
+      \strng{fullhash}{06e2e4d39b368cf95ea8be2716a9949d}
+      \strng{bibnamehash}{06e2e4d39b368cf95ea8be2716a9949d}
+      \strng{authorbibnamehash}{06e2e4d39b368cf95ea8be2716a9949d}
+      \strng{authornamehash}{06e2e4d39b368cf95ea8be2716a9949d}
+      \strng{authorfullhash}{06e2e4d39b368cf95ea8be2716a9949d}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Инженерный журнал: наука и инновации}
+      \field{title}{Сравнение процессов обработки запроса к одной таблице в параллельной строчной и колоночной системе баз данных}
+      \field{year}{2012}
+      \field{number}{3}
+      \range{number}{1}
+    \endentry
+    \entry{voroneg}{article}{}
+      \name{author}{2}{}{%
+        {{hash=6128899b402924f8d0f4ae48e4aca054}{%
+           family={Сергеева},
+           familyi={С\bibinitperiod},
+           given={Т.\bibnamedelimi И.},
+           giveni={Т\bibinitperiod\bibinitdelim И\bibinitperiod}}}%
+        {{hash=c69efa49e13008cad260755fd51cca5f}{%
+           family={Сергеев},
+           familyi={С\bibinitperiod},
+           given={М.\bibnamedelimi Ю.},
+           giveni={М\bibinitperiod\bibinitdelim Ю\bibinitperiod}}}%
+      }
+      \strng{namehash}{761a7d64781666f1039cdd10cf68e113}
+      \strng{fullhash}{761a7d64781666f1039cdd10cf68e113}
+      \strng{bibnamehash}{761a7d64781666f1039cdd10cf68e113}
+      \strng{authorbibnamehash}{761a7d64781666f1039cdd10cf68e113}
+      \strng{authornamehash}{761a7d64781666f1039cdd10cf68e113}
+      \strng{authorfullhash}{761a7d64781666f1039cdd10cf68e113}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{ФГБОУ ВПО «Воронежский государственный технический университет»}
+      \field{title}{Базы данных: модели данных, проектирование, язык SQL}
+      \field{year}{2012}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
