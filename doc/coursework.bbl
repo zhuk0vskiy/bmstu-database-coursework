@@ -200,6 +200,54 @@
       \field{title}{Базы данных: модели данных, проектирование, язык SQL}
       \field{year}{2012}
     \endentry
+    \entry{golang_crypt}{misc}{}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labeltitlesource}{title}
+      \field{title}{Документация библиотеки bcrypt Golang}
+    \endentry
+    \entry{golang_dbms}{misc}{}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labeltitlesource}{title}
+      \field{title}{Документация библиотеки pgx Golang}
+    \endentry
+    \entry{golang_testing}{misc}{}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labeltitlesource}{title}
+      \field{title}{Документация библиотеки тестирования Golang}
+    \endentry
+    \entry{golang_jwt}{misc}{}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labeltitlesource}{title}
+      \field{title}{Документация библиотеки jwt-go Golang}
+    \endentry
+    \entry{golang_testcontainers}{misc}{}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labeltitlesource}{title}
+      \field{title}{Документация библиотеки testcontainers Golang}
+    \endentry
+    \entry{docker}{misc}{}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{title}{Документация контейнеров Docker}
+    \endentry
+    \entry{golang_tview}{misc}{}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{title}{Документация библиотеки tview Golang}
+    \endentry
+    \entry{ubuntu}{misc}{}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{title}{Документация Ubuntu 20.04}
+    \endentry
   \enddatalist
 \endrefsection
 \endinput

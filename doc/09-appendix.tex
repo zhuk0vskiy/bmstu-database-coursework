@@ -1,3 +1,108 @@
 \begin{appendices}
-	\chapter{}
+	\chapter{Тестирование БД}
+	\begin{lstlisting}[language=go, label=lst:testing_code]
+func TestStudioPostrgresql_Get(t *testing.T) {
+type fields struct {
+	db *pgxpool.Pool
+}
+
+type args struct {
+	ctx     context.Context
+	request *dto.GetStudioRequest
+}
+
+tests := []struct {
+	name string
+	args       args
+	wantStudio *model.Studio
+	wantErr    bool
+}{
+	{
+		name: "test_pos_01",
+		args: args{
+			ctx: context.Background(),
+			request: &dto.GetStudioRequest{
+			Id: 1,
+			},
+		},
+		wantStudio: &model.Studio{
+			Id:   1,
+			Name: "first",
+		},
+		wantErr: false,
+	},
+}
+
+for _, tt := range tests {
+	t.Run(tt.name, func(t *testing.T) {
+		p := postgresql.NewStudioRepository(testDbInstance)
+
+		gotStudio, err := p.Get(tt.args.ctx, tt.args.request)
+		if (err != nil) != tt.wantErr {
+			t.Errorf("Get() error = %v, wantErr %v", err, tt.wantErr)
+		return
+		}
+		if !reflect.DeepEqual(gotStudio, tt.wantStudio) {
+			t.Errorf("Get() gotStudio = %v, want %v", gotStudio, tt.wantStudio)
+		}
+	})
+}
+	\end{lstlisting}
+	\captionof{figure}{Код тестирования}
 \end{appendices}
+
+
+
+\begin{lstlisting}[language=go, label=lst:testing_res]
+=== RUN   TestEquipmentRepository_GetFullTimeFreeByStudioAndType
+--- PASS: TestEquipmentRepository_GetFullTimeFreeByStudioAndType (0.01s)
+=== RUN   TestEquipmentRepository_GetFullTimeFreeByStudioAndType/test_pos_01
+	--- PASS: TestEquipmentRepository_GetFullTimeFreeByStudioAndType/test_pos_01 (0.01s)
+=== RUN   TestEquipmentRepository_GetNotFullTimeFreeByStudioAndType
+--- PASS: TestEquipmentRepository_GetNotFullTimeFreeByStudioAndType (0.01s)
+=== RUN   TestEquipmentRepository_GetNotFullTimeFreeByStudioAndType/test_pos_01
+	--- PASS: TestEquipmentRepository_GetNotFullTimeFreeByStudioAndType/test_pos_01 (0.01s)
+=== RUN   TestReserveRepository_Add
+--- PASS: TestReserveRepository_Add (0.00s)
+=== RUN   TestReserveRepository_GetByRoomId
+--- PASS: TestReserveRepository_GetByRoomId (0.01s)
+=== RUN   TestReserveRepository_GetByRoomId/test_pos_01
+	--- PASS: TestReserveRepository_GetByRoomId/test_pos_01 (0.01s)
+=== RUN   TestReserveRepository_IsRoomReserve
+--- PASS: TestReserveRepository_IsRoomReserve (0.00s)
+=== RUN   TestReserveRepository_IsRoomReserve/test_pos_01
+	--- PASS: TestReserveRepository_IsRoomReserve/test_pos_01 (0.00s)
+=== RUN   TestReserveRepository_IsRoomReserve/test_pod_02
+	--- PASS: TestReserveRepository_IsRoomReserve/test_pod_02 (0.00s)
+=== RUN   TestReserveRepository_IsEquipmentReserve
+--- PASS: TestReserveRepository_IsEquipmentReserve (0.00s)
+=== RUN   TestReserveRepository_IsEquipmentReserve/test_pos_01
+	--- PASS: TestReserveRepository_IsEquipmentReserve/test_pos_01 (0.00s)
+=== RUN   TestRoomRepository_GetByStudio
+--- PASS: TestRoomRepository_GetByStudio (0.00s)
+=== RUN   TestRoomRepository_GetByStudio/test_pos_01
+	--- PASS: TestRoomRepository_GetByStudio/test_pos_01 (0.00s)
+=== RUN   TestStudioPostrgresql_Get
+--- PASS: TestStudioPostrgresql_Get (0.00s)
+=== RUN   TestStudioPostrgresql_Get/test_pos_01
+	--- PASS: TestStudioPostrgresql_Get/test_pos_01 (0.00s)
+=== RUN   TestStudioRepository_Update
+--- PASS: TestStudioRepository_Update (0.04s)
+=== RUN   TestStudioRepository_Update/test_pos_01
+	--- PASS: TestStudioRepository_Update/test_pos_01 (0.04s)
+=== RUN   TestStudioRepository_Add
+--- PASS: TestStudioRepository_Add (0.11s)
+=== RUN   TestStudioRepository_Add/test_pos_01
+	--- PASS: TestStudioRepository_Add/test_pos_01 (0.11s)
+=== RUN   TestStudioRepository_Delete
+--- PASS: TestStudioRepository_Delete (0.02s)
+=== RUN   TestStudioRepository_Delete/test_pos_01
+	--- PASS: TestStudioRepository_Delete/test_pos_01 (0.02s)
+=== RUN   TestUserRepository_GetByLogin
+--- PASS: TestUserRepository_GetByLogin (0.01s)
+=== RUN   TestUserRepository_GetByLogin/test_neg_01
+	--- PASS: TestUserRepository_GetByLogin/test_neg_01 (0.01s)
+PASS
+\end{lstlisting}
+\captionof{figure}{Результат тестирования}
+
