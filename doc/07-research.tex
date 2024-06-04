@@ -8,12 +8,11 @@
 	\item операционная система: Ubuntu 20.04~\cite{ubuntu};
 	\item размер оперативной памяти: 16 Гбайт;
 	\item процессор AMD Ryzen 5 5500U with Radeon Graphics.
-
 \end{itemize}
 	
 На протяжении всего тестирования компьютер был подключен к сети питания.
 \section{Исследование}
-Задача заключалась в исследования зависимости времени работы от сложности запроса.
+Задача заключалась в исследовании зависимости времени работы от сложности запроса.
 Исследование проводилось на заранее заготовленной таблице, количество записей в которой было равно 500 штук.
 
 Градация сложности запросов была следующая:
@@ -45,7 +44,7 @@
 		from equipment where 
 			equipment.studio_id = $1 and
 			equipment.type = $2\end{lstlisting}
-	\item запрос пятой сложности
+	\item запрос пятой сложности:
 			\begin{lstlisting}[language=sql, label=lst:query_2]
 			select equipment.id,
 				equipment.name,
@@ -56,7 +55,7 @@
 				equipment.type = $2 and 
 				not exists
 					(select * from reserved_equipments where equipment.id = reserved_equipments.equipment_id)\end{lstlisting}
-	\item запрос шестой сложности
+	\item запрос шестой сложности:
 			\begin{lstlisting}[language=sql, label=lst:query_2]
 			select equipment.id, 
 				equipment.name,
@@ -72,7 +71,7 @@
 \end{enumerate}  
 
 Для каждого запроса время замерялось 1000 раз и суммировалось.
-После чего бралось среднее значение.
+После бралось среднее значение.
 
 По итогам исследования получились следующие результаты, представленные в таблице~\ref{table:res} и на рисунке~\ref{img:chart}.
 
@@ -95,12 +94,21 @@
 \end{table}
 
 
-\begin{center}
-	\centering
-	\includegraphics[height=0.3\textheight]{inc/img/chart.png}
-	\captionof{figure}{График зависимости времени работы от сложности запроса}
-	\label{img:chart}
-\end{center}
+%\begin{center}
+%	\centering
+%	\includegraphics[height=0.3\textheight]{inc/img/chart.png}
+%	\captionof{figure}{График зависимости времени работы от сложности запроса}
+%	\label{img:chart}
+%\end{center}
+
+\includeimage
+{chart} % Имя файла без расширения (файл должен быть расположен в директории inc/img/)
+{f} % Обтекание (с обтеканием)
+{H} % Положение рисунка (см. wrapfigure из пакета wrapfig)
+{\textwidth} % Ширина рисунка
+{График зависимости времени работы от сложности запроса} % Подпись рисунка
+
+
 \section*{Вывод}
 В ходе выполнения исследовательской части было выявлено, что время работы напрямую зависит от сложности запроса --- чем сложнее запрос, тем больше времени системе требуется на его обработку.
 Также на графике можно наблюдать довольно резкий скачок времени работы в 1.16 раз между Запросом 1 и Запросом 2.

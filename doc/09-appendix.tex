@@ -1,6 +1,80 @@
+
+
 \begin{appendices}
-	\chapter{Тестирование БД}
-	\begin{lstlisting}[language=go, label=lst:testing_code]
+	\chapter{Тестирование}
+
+\begin{lstlisting}[language=go, label=lst:testing_code]
+func TestEquipmentService_Get(t *testing.T) {
+type fields struct {
+	equipmentRepo _interface.IEquipmentRepository
+	reserveRepo   _interface.IReserveRepository
+}
+type args struct {
+	request *dto.GetEquipmentRequest
+}
+tests := []struct {
+	name          string
+	fields        fields
+	args          args
+	wantEquipment *model.Equipment
+	wantErr       bool
+}{
+{
+	name: "test_pos_01",
+	args: args{
+		&dto.GetEquipmentRequest{
+			Id: 1,
+		},
+	},
+	wantErr: false,
+	wantEquipment: &model.Equipment{
+		Id:            1,
+		Name:          "1",
+		StudioId:      1,
+		EquipmentType: 1,
+	},
+},
+{
+	name: "test_neg_01",
+	args: args{
+		&dto.GetEquipmentRequest{
+			Id: 0,
+		},
+	},
+	wantErr:       true,
+	wantEquipment: nil,
+	},
+}
+for _, tt := range tests {
+	prodRepo := new(mocks.IEquipmentRepository)
+	prodRepo.On("Get", context.Background(), tt.args.request).Return(&model.Equipment{
+		Id:            1,
+		Name:          "1",
+		StudioId:      1,
+		EquipmentType: 1,
+	}, nil)
+	t.Run(tt.name, func(t *testing.T) {
+		s := EquipmentService{
+			equipmentRepo: prodRepo,
+		}
+		gotEquipment, err := s.Get(tt.args.request)
+		if (err != nil) != tt.wantErr {
+			t.Errorf("Get() error = %v, wantErr %v", err, tt.wantErr)
+			return
+		}
+		if !reflect.DeepEqual(gotEquipment, tt.wantEquipment) {
+			t.Errorf("Get() gotEquipment = %v, want %v", gotEquipment, tt.wantEquipment)
+		}
+	})
+}
+
+\end{lstlisting}
+\caption{Часть кода модульного тестирования}
+
+
+
+
+\begin{lstlisting}[language=go, label=lst:testing_code]
 func TestStudioPostrgresql_Get(t *testing.T) {
 type fields struct {
 	db *pgxpool.Pool
@@ -48,9 +122,7 @@ for _, tt := range tests {
 	})
 }
 	\end{lstlisting}
-	\captionof{figure}{Код тестирования}
-\end{appendices}
-
+	\captionof{figure}{Часть кода интеграционного тестирования}
 
 
 \begin{lstlisting}[language=go, label=lst:testing_res]
@@ -104,5 +176,91 @@ for _, tt := range tests {
 	--- PASS: TestUserRepository_GetByLogin/test_neg_01 (0.01s)
 PASS
 \end{lstlisting}
-\captionof{figure}{Результат тестирования}
+\caption{Результат тестирования}
+\chapter{Презентация}
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[page=1, width=\linewidth]{presentation.pdf}
+	\end{center}
+	\caption{Презентация -- Слайд 1}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[page=2, width=\linewidth]{presentation.pdf}
+	\end{center}
+	\caption{Презентация -- Слайд 2}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[page=3, width=\linewidth]{presentation.pdf}
+	\end{center}
+	\caption{Презентация -- Слайд 3}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[page=4, width=\linewidth]{presentation.pdf}
+	\end{center}
+	\caption{Презентация -- Слайд 4}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[page=5, width=\linewidth]{presentation.pdf}
+	\end{center}
+	\caption{Презентация -- Слайд 5}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[page=6, width=\linewidth]{presentation.pdf}
+	\end{center}
+	\caption{Презентация -- Слайд 6}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[page=7, width=\linewidth]{presentation.pdf}
+	\end{center}
+	\caption{Презентация -- Слайд 7}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[page=8, width=\linewidth]{presentation.pdf}
+	\end{center}
+	\caption{Презентация -- Слайд 8}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[page=9, width=\linewidth]{presentation.pdf}
+	\end{center}
+	\caption{Презентация -- Слайд 9}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[page=10, width=\linewidth]{presentation.pdf}
+	\end{center}
+	\caption{Презентация -- Слайд 10}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[page=11, width=\linewidth]{presentation.pdf}
+	\end{center}
+	\caption{Презентация -- Слайд 11}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[page=12, width=\linewidth]{presentation.pdf}
+	\end{center}
+	\caption{Презентация -- Слайд 12}
+\end{figure}
+
+\end{appendices}
 
