@@ -1,6 +1,6 @@
 \chapter{Исследовательский раздел}
 
-В данном разделе будут представлены технические характеристики и будет проведено исследование.
+В данном разделе будут представлены технические характеристики и будет проведено исследование для определения зависимости времени работы от сложности запроса в базу данных.
 
 \section{Технические характеристики}
 Технические характеристики устройства, на котором выполнялось исследование:
@@ -18,56 +18,29 @@
 Градация сложности запросов была следующая:
 \begin{enumerate}
 	\item запрос первой сложности:
-		\begin{lstlisting}[language=sql, label=lst:query_1]
-		select equipment.id from equipment\end{lstlisting}
+		\includelisting
+		{1.sql}
+		{Запрос первой сложности}
 	\item запрос второй сложности:
-		\begin{lstlisting}[language=sql, label=lst:query_2]
-		select equipment.id,
-			equipment.name,
-			equipment.type,
-			equipment.studio_id
-		from equipment\end{lstlisting}
+		\includelisting
+		{2.sql}
+		{Запрос второй сложности}
 	\item запрос третьей сложности:
-		\begin{lstlisting}[language=sql, label=lst:query_2]
-		select equipment.id,
-			equipment.name,
-			equipment.type,
-			equipment.studio_id
-		from equipment where 
-			equipment.studio_id = $1\end{lstlisting}
+		\includelisting
+{3.sql}
+{Запрос третьей сложности}
 	\item запрос четвертой сложности:
-		\begin{lstlisting}[language=sql, label=lst:query_2]
-		select equipment.id,
-			equipment.name,
-			equipment.type,
-			equipment.studio_id
-		from equipment where 
-			equipment.studio_id = $1 and
-			equipment.type = $2\end{lstlisting}
+		\includelisting
+{4.sql}
+{Запрос четвертой сложности}
 	\item запрос пятой сложности:
-			\begin{lstlisting}[language=sql, label=lst:query_2]
-			select equipment.id,
-				equipment.name,
-				equipment.type,
-				equipment.studio_id
-			from equipment where 
-				equipment.studio_id = $1 and
-				equipment.type = $2 and 
-				not exists
-					(select * from reserved_equipments where equipment.id = reserved_equipments.equipment_id)\end{lstlisting}
+		\includelisting
+{5.sql}
+{Запрос пятой сложности}
 	\item запрос шестой сложности:
-			\begin{lstlisting}[language=sql, label=lst:query_2]
-			select equipment.id, 
-				equipment.name,
-				equipment.type,
-				equipment.studio_id,
-				to_char(reserve.start_time, 'YYYY-MM-DD HH24:MI:SS'),
-				to_char(reserve.end_time, 'YYYY-MM-DD HH24:MI:SS')
-			from equipment, reserve where 
-				equipment.studio_id = $1 and 
-				equipment.type = $2 and 
-				exists 
-					(select * from reserved_equipments where equipment.id = reserved_equipments.equipment_id)\end{lstlisting}
+		\includelisting
+{6.sql}
+{Запрос шестой сложности}
 \end{enumerate}  
 
 Для каждого запроса время замерялось 1000 раз и суммировалось.

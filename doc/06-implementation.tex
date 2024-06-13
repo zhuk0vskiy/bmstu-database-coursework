@@ -5,14 +5,6 @@
 
 
 \section{Средства реализации}
-\subsection{Выбор языка}
-Для разработки был выбран язык Golang. Данный выбор обусловлен следующими возможностями языка:
-\begin{itemize}
-	\item Возможность шифрования данных \cite{golang_crypt}
-	\item Возможность взаимодействия с выбранными СУБД \cite{golang_dbms}
-	\item Возможность удобного тестирования ПО \cite{golang_testing}
-	\item Возможность работы с JWT-токенами \cite{golang_jwt}
-\end{itemize}
 
 \subsection{Выбор СУБД}
 В аналитическом разделе был сделан выбор в пользу реляционной модели БД.
@@ -29,56 +21,28 @@
 
 Всем этим требованием удовлетворяет СУБД PostregSQL.
 
-\section{Реализация процедур}
-Реализация процедур, используемых во время работы алгоритма добавления брони представлены на листингах \ref{lst:is_intersect} --- \ref{lst:is_reserve}.
-\newline
-\begin{lstlisting}[label=lst:is_reserve]
-create or replace function is_reserve(userId integer,
-									roomId integer,
-									producerId integer,
-									instrumentalistId integer,
-									startTime timestamp,
-									endTime timestamp) returns integer language plpgsql as $$
-declare
-	count integer;
-begin
-	select count(*) into count
-	from reserve
-	where (user_id = userId or
-		room_id = roomId or
-		producer_id = producerId or
-		instrumentalist_id = instrumentalistId) and 
-			is_intersect(reserve.start_time,
-						reserve.end_time,
-						startTime,
-						endTime);
+\subsection{Выбор языка}
+Для разработки был выбран язык Golang. Данный выбор обусловлен следующими возможностями языка:
+\begin{itemize}
+	\item Возможностью шифрования данных для хранения в БД~\cite{golang_crypt};
+	\item Возможностью взаимодействия с выбранным СУБД~\cite{golang_dbms};
+	\item Возможностью удобного тестирования ПО c помощью библиотек~\cite{golang_testing};
+	\item Возможностью работы с JWT-токенами для аутентификации~\cite{golang_jwt}.
+\end{itemize}
 
-	return count;
-end;
-$$;
-\end{lstlisting}
-\captionof{figure}{Реализация алгоритма проверки занятости}
+
+\section{Реализация процедур}
+Реализация процедур, используемых во время работы алгоритма добавления брони представлены на листингах \ref{lst:is_reserve.sql} --- \ref{lst:is_intersect.sql}.
+\newline
+
+\includelisting
+{is_reserve.sql}
+{Реализация алгоритма проверки занятости}
 \newpage
 
-\begin{lstlisting}[language=sql, label=lst:is_intersect]
-create or replace function is_intersect(reserveStartTime timestamp, 
-										reserveEndTime timestamp,
-										choosenStartTime timestamp,
-										choosenEndTime timestamp) returns boolean language plpgsql as $$
-declare
-	ans boolean;
-begin
-	ans = false;
-	if ((choosenStartTime >= reserveStartTime and choosenStartTime < reserveEndTime) or
-	(choosenEndTime <= reserveEndTime and choosenEndTime > reserveStartTime) or
-	(choosenStartTime <= reserveStartTime and choosenEndTime >= reserveEndTime)) then
-		ans = true;
-	end if;
-	return ans;
-end;
-$$;
-\end{lstlisting}
-\captionof{figure}{Реализация алгоритма проверки пересечения времени}
+\includelisting
+{is_intersect.sql}
+{Реализация алгоритма проверки пересечения времени}
 
 \section{Реализация приложения}
 
