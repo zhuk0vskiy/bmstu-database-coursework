@@ -1,12 +1,12 @@
 package main
 
 import (
-	"app/src/config"
-	"app/src/pkg/logger"
-	"app/src/tui"
 	"context"
 	"fmt"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/config"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/logger"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/tui"
 	"log"
 	"os"
 )

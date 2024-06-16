@@ -1,8 +1,8 @@
 package _interface
 
 import (
-	"app/src/internal/model"
-	"app/src/internal/model/dto"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model/dto"
 )
 
 type IRoomService interface {

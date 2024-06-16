@@ -1,6 +1,6 @@
 package dto
 
-import "app/src/internal/model"
+import "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model"
 
 type NewTimeIntervalRequest struct {
 	StartTime *model.Time

@@ -1,10 +1,10 @@
 package postgresql
 
 import (
-	"app/src/internal/model"
-	"app/src/internal/model/dto"
-	repositoryInterface "app/src/internal/repository/interface"
-	"app/src/pkg/time_parser"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model/dto"
+	repositoryInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/repository/interface"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/time_parser"
 	"context"
 	"fmt"
 	"github.com/jackc/pgx/v5/pgxpool"

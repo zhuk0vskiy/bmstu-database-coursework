@@ -1,9 +1,9 @@
 package _interface
 
 import (
-	"app/src/internal/model"
-	"app/src/internal/model/dto"
 	"context"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model/dto"
 )
 
 //go:generate go run github.com/vektra/mockery/v2@v2.42.1 --name=IRoomRepository

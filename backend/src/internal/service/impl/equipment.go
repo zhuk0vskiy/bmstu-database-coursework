@@ -1,13 +1,13 @@
 package impl
 
 import (
-	"app/src/internal/model"
-	"app/src/internal/model/dto"
-	repositoryInterface "app/src/internal/repository/interface"
-	serviceInterface "app/src/internal/service/interface"
-	"app/src/pkg/logger"
 	"context"
 	"fmt"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model/dto"
+	repositoryInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/repository/interface"
+	serviceInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/service/interface"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/logger"
 )
 
 type EquipmentService struct {
@@ -29,7 +29,7 @@ func NewEquipmentService(
 
 func (s EquipmentService) GetByReserve(request *dto.GetEquipmentByReserveRequest) (equipments []*model.Equipment, err error) {
 	if request.ReserveId < 1 {
-		s.logger.Infof("ошибка get equipment by reserve: %s", fmt.Errorf("неверный reserveId: %w", err))
+		s.logger.Infof("ошибка get equipment by reserve %d: %s", request.ReserveId, fmt.Errorf("неверный reserveId: %w", err))
 		return nil, fmt.Errorf("неверный reserveId: %w", err)
 	}
 
@@ -41,7 +41,7 @@ func (s EquipmentService) GetByReserve(request *dto.GetEquipmentByReserveRequest
 	})
 
 	if err != nil {
-		s.logger.Errorf("ошибка get equipment by reserve: %s", err.Error())
+		s.logger.Errorf("ошибка get equipment by reserve %d: %s", request.ReserveId, err.Error())
 		return nil, fmt.Errorf("получение оборудования по reserveId: %w", err)
 	}
 
@@ -50,7 +50,7 @@ func (s EquipmentService) GetByReserve(request *dto.GetEquipmentByReserveRequest
 
 func (s EquipmentService) Get(request *dto.GetEquipmentRequest) (equipment *model.Equipment, err error) {
 	if request.Id < 1 {
-		s.logger.Infof("ошибка get equipment by id: %s", fmt.Errorf("неверный id: %w", err))
+		s.logger.Infof("ошибка get equipment %d by id: %s", request.Id, fmt.Errorf("неверный id: %w", err))
 		return nil, fmt.Errorf("неверный id: %w", err)
 	}
 
@@ -62,7 +62,7 @@ func (s EquipmentService) Get(request *dto.GetEquipmentRequest) (equipment *mode
 	})
 
 	if err != nil {
-		s.logger.Errorf("ошибка get equipment by id: %s", err.Error())
+		s.logger.Errorf("ошибка get equipment %d by id: %s", request.Id, err.Error())
 		return nil, fmt.Errorf("получение оборудования по id: %w", err)
 	}
 
@@ -72,17 +72,17 @@ func (s EquipmentService) Get(request *dto.GetEquipmentRequest) (equipment *mode
 func (s EquipmentService) Add(request *dto.AddEquipmentRequest) (err error) {
 
 	if request.Name == "" {
-		s.logger.Infof("ошибка add equipment: %s", fmt.Errorf("пустое название: %w", err))
+		s.logger.Infof("ошибка add equipment %s %d %d: %s", request.Name, request.Type, request.StudioId, fmt.Errorf("пустое название: %w", err))
 		return fmt.Errorf("пустое название: %w", err)
 	}
 
 	if request.StudioId < 1 {
-		s.logger.Infof("ошибка add equipment: %s", fmt.Errorf("отрицательный id студии: %w", err))
+		s.logger.Infof("ошибка add equipment %s %d %d: %s", request.Name, request.Type, request.StudioId, fmt.Errorf("отрицательный id студии: %w", err))
 		return fmt.Errorf("отрицательный id студии: %w", err)
 	}
 
 	if request.Type <= model.OutOfFirstEquipment || request.Type >= model.OutOfLastEquipment {
-		s.logger.Infof("ошибка add equipment: %s", fmt.Errorf("неверный тип оборудования"))
+		s.logger.Infof("ошибка add equipment %s %d %d: %s", request.Name, request.Type, request.StudioId, fmt.Errorf("неверный тип оборудования"))
 		return fmt.Errorf("неверный тип оборудования")
 	}
 
@@ -95,7 +95,7 @@ func (s EquipmentService) Add(request *dto.AddEquipmentRequest) (err error) {
 		Type:     request.Type,
 	})
 	if err != nil {
-		s.logger.Errorf("ошибка add equipment: %s", fmt.Errorf("добавление студии: %w", err))
+		s.logger.Errorf("ошибка add equipment %s %d %d: %s", request.Name, request.Type, request.StudioId, fmt.Errorf("добавление студии: %w", err))
 		return fmt.Errorf("добавление студии: %w", err)
 	}
 
@@ -104,7 +104,7 @@ func (s EquipmentService) Add(request *dto.AddEquipmentRequest) (err error) {
 
 func (s EquipmentService) Update(request *dto.UpdateEquipmentRequest) (err error) {
 	if request.Id < 1 {
-		s.logger.Infof("ошибка update equipment: %s", fmt.Errorf("неверный id: %w", err))
+		s.logger.Infof("ошибка update equipment %d %d %d: %s", request.Id, request.Type, request.Type, fmt.Errorf("неверный id: %w", err))
 		return fmt.Errorf("неверный id: %w", err)
 	}
 
@@ -115,27 +115,27 @@ func (s EquipmentService) Update(request *dto.UpdateEquipmentRequest) (err error
 		EquipmentId: request.Id,
 	})
 	if err != nil {
-		s.logger.Errorf("ошибка update equipment: %s", fmt.Errorf("получение броней c оборудованием: %w", err))
+		s.logger.Errorf("ошибка update equipment %d %d %d: %s", request.Id, request.Type, request.Type, fmt.Errorf("получение броней c оборудованием: %w", err))
 		return fmt.Errorf("получение броней c оборудованием: %w", err)
 	}
 
 	if isReserve == true {
-		s.logger.Infof("ошибка update equipment: %s", fmt.Errorf("получение броней c оборудованием: %w", err))
+		s.logger.Infof("ошибка update equipment %d %d %d: %s", request.Id, request.Type, request.Type, fmt.Errorf("получение броней c оборудованием: %w", err))
 		return fmt.Errorf("нельзя обновить оборудование, тк на него есть бронь")
 	}
 
 	if request.Name == "" {
-		s.logger.Infof("ошибка update equipment: %s", fmt.Errorf("ошибка пустого название: %w", err))
+		s.logger.Infof("ошибка update equipment %d %d %d: %s", request.Id, request.Type, request.Type, fmt.Errorf("ошибка пустого название: %w", err))
 		return fmt.Errorf("ошибка пустого название: %w", err)
 	}
 
 	if request.StudioId < 1 {
-		s.logger.Infof("ошибка update equipment: %s", fmt.Errorf("отрицательный id студии: %w", err))
+		s.logger.Infof("ошибка update equipment %d %d %d: %s", request.Id, request.Type, request.Type, fmt.Errorf("отрицательный id студии: %w", err))
 		return fmt.Errorf("отрицательный id студии: %w", err)
 	}
 
 	if request.Type <= model.OutOfFirstEquipment || request.Type >= model.OutOfLastEquipment {
-		s.logger.Infof("ошибка update equipment: %s", fmt.Errorf("неверный тип оборудования"))
+		s.logger.Infof("ошибка update equipment %d %d %d: %s", request.Id, request.Type, request.Type, fmt.Errorf("неверный тип оборудования"))
 		return fmt.Errorf("неверный тип оборудования")
 	}
 
@@ -148,7 +148,7 @@ func (s EquipmentService) Update(request *dto.UpdateEquipmentRequest) (err error
 		Type:     request.Type,
 	})
 	if err != nil {
-		s.logger.Errorf("ошибка update equipment: %s", fmt.Errorf("обновление студии: %w", err))
+		s.logger.Errorf("ошибка update equipment %d %d %d: %s", request.Id, request.Type, request.Type, fmt.Errorf("обновление студии: %w", err))
 		return fmt.Errorf("обновление студии: %w", err)
 	}
 
@@ -157,7 +157,7 @@ func (s EquipmentService) Update(request *dto.UpdateEquipmentRequest) (err error
 
 func (s EquipmentService) Delete(request *dto.DeleteEquipmentRequest) (err error) {
 	if request.Id < 1 {
-		s.logger.Infof("ошибка delete equipment: %s", fmt.Errorf("неправильный id: %w", err))
+		s.logger.Infof("ошибка delete equipment %d: %s", request.Id, fmt.Errorf("неправильный id: %w", err))
 		return fmt.Errorf("неправильный id: %w", err)
 	}
 
@@ -169,7 +169,7 @@ func (s EquipmentService) Delete(request *dto.DeleteEquipmentRequest) (err error
 	})
 
 	if err != nil {
-		s.logger.Errorf("ошибка delete equipment: %s", fmt.Errorf("ошибка получения студий по id: %w", err))
+		s.logger.Errorf("ошибка delete equipment %d: %s", request.Id, fmt.Errorf("ошибка получения студий по id: %w", err))
 		return fmt.Errorf("ошибка получения студий по id: %w", err)
 	}
 
@@ -178,7 +178,7 @@ func (s EquipmentService) Delete(request *dto.DeleteEquipmentRequest) (err error
 
 func (s EquipmentService) GetByStudio(request *dto.GetEquipmentByStudioRequest) (equipments []*model.Equipment, err error) {
 	if request.StudioId < 1 {
-		s.logger.Infof("ошибка get equipment by studio: %s", fmt.Errorf("неверный id: %w", err))
+		s.logger.Infof("ошибка get equipment by studio %d: %s", request.StudioId, fmt.Errorf("неверный id: %w", err))
 		return nil, fmt.Errorf("неверный id: %w", err)
 	}
 
@@ -190,7 +190,7 @@ func (s EquipmentService) GetByStudio(request *dto.GetEquipmentByStudioRequest) 
 	})
 
 	if err != nil {
-		s.logger.Errorf("ошибка get equipment by studio: %s", fmt.Errorf("получение оборудования по типу: %w", err))
+		s.logger.Errorf("ошибка get equipment by studio %d: %s", request.StudioId, fmt.Errorf("получение оборудования по типу: %w", err))
 		return nil, fmt.Errorf("получение оборудования по типу: %w", err)
 	}
 

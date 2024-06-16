@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"app/src/internal/model"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model"
 )
 
 type GetSuitableStuffRequest struct {

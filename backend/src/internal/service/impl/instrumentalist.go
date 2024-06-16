@@ -1,11 +1,11 @@
 package impl
 
 import (
-	"app/src/internal/model"
-	"app/src/internal/model/dto"
-	repositoryInterface "app/src/internal/repository/interface"
-	serviceInterface "app/src/internal/service/interface"
-	"app/src/pkg/logger"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model/dto"
+	repositoryInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/repository/interface"
+	serviceInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/service/interface"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/logger"
 	"context"
 	"fmt"
 )

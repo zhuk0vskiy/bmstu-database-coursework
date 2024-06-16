@@ -1,12 +1,12 @@
 package postgresql
 
 import (
-	"app/src/internal/model"
-	"app/src/internal/model/dto"
-	repositoryInterface "app/src/internal/repository/interface"
 	"context"
 	"fmt"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model/dto"
+	repositoryInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/repository/interface"
 )
 
 type StudioRepository struct {

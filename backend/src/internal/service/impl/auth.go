@@ -1,12 +1,12 @@
 package impl
 
 import (
-	"app/src/internal/model/dto"
-	repositoryInterface "app/src/internal/repository/interface"
-	"app/src/pkg/base"
-	"app/src/pkg/logger"
 	"context"
 	"fmt"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model/dto"
+	repositoryInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/repository/interface"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/base"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/logger"
 )
 
 type AuthService struct {
@@ -95,18 +95,18 @@ func (s AuthService) LogIn(request *dto.LogInRequest) (token string, err error) 
 		Login: request.Login,
 	})
 	if err != nil {
-		s.logger.Infof("ошибка при регистрации пользователя: %s", err.Error())
+		s.logger.Infof("ошибка при входе пользователя %s: %s", request.Login, err.Error())
 		return "", fmt.Errorf("получение пользователя по login: %w", err) // FIXME: invalid_username
 	}
 
 	if !s.crypto.CheckPasswordHash(request.Password, user.Password) {
-		s.logger.Infof("ошибка при регистрации пользователя: %s", fmt.Errorf("неверный пароль"))
+		s.logger.Infof("ошибка при регистрации пользователя %d: %s", user.Id, fmt.Errorf("неверный пароль"))
 		return "", fmt.Errorf("неверный пароль")
 	}
 
 	token, err = base.GenerateAuthToken(request.Login, s.jwtKey, user.Role)
 	if err != nil {
-		s.logger.Errorf("ошибка при регистрации пользователя: %s", err.Error())
+		s.logger.Errorf("ошибка при регистрации пользователя %d: %s", user.Id, err.Error())
 		return "", fmt.Errorf("генерация токена: %w", err)
 	}
 

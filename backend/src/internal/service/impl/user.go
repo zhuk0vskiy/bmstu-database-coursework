@@ -1,27 +1,31 @@
 package impl
 
 import (
-	"app/src/internal/model"
-	"app/src/internal/model/dto"
-	repositoryInterface "app/src/internal/repository/interface"
-	serviceInterface "app/src/internal/service/interface"
-	"app/src/pkg/base"
 	"context"
 	"fmt"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model/dto"
+	repositoryInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/repository/interface"
+	serviceInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/service/interface"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/base"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/logger"
 )
 
 type UserService struct {
 	userRepo    repositoryInterface.IUserRepository
 	reserveRepo repositoryInterface.IReserveRepository
 	crypto      base.IHashCrypto
+	logger      logger.Interface
 }
 
 func NewUserService(
+	logger logger.Interface,
 	userRepo repositoryInterface.IUserRepository,
 	reserveRepo repositoryInterface.IReserveRepository,
 	crypto base.IHashCrypto,
 ) serviceInterface.IUserService {
 	return &UserService{
+		logger:      logger,
 		userRepo:    userRepo,
 		reserveRepo: reserveRepo,
 		crypto:      crypto,
@@ -30,6 +34,7 @@ func NewUserService(
 
 func (s UserService) GetReserves(request *dto.GetUserReservesRequest) (reserves []*model.Reserve, err error) {
 	if request.Id < 1 {
+		s.logger.Infof("ошибка get user %d reserves: %s", request.Id, fmt.Errorf("неверный id: %w", err))
 		return nil, fmt.Errorf("неверный id: %w", err)
 	}
 
@@ -42,6 +47,7 @@ func (s UserService) GetReserves(request *dto.GetUserReservesRequest) (reserves 
 	})
 
 	if err != nil {
+		s.logger.Errorf("ошибка get user %d reserves: %s", request.Id, fmt.Errorf("получение всех броней: %w", err))
 		return nil, fmt.Errorf("получение всех броней: %w", err)
 	}
 
@@ -50,7 +56,8 @@ func (s UserService) GetReserves(request *dto.GetUserReservesRequest) (reserves 
 
 func (s UserService) Get(request *dto.GetUserRequest) (user *model.User, err error) {
 	if request.Id < 1 {
-		return nil, fmt.Errorf("получение пользователя по id: %w", err)
+		s.logger.Infof("ошибка get user %d: %s", request.Id, fmt.Errorf("ошибка id < 1: %w", err))
+		return nil, fmt.Errorf("ошибка id < 1: %w", err)
 	}
 
 	//ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -60,6 +67,7 @@ func (s UserService) Get(request *dto.GetUserRequest) (user *model.User, err err
 		Id: request.Id,
 	})
 	if err != nil {
+		s.logger.Infof("ошибка get user %d: %s", request.Id, fmt.Errorf("получение пользователя по id: %w", err))
 		return nil, fmt.Errorf("получение пользователя по id: %w", err)
 	}
 
@@ -68,7 +76,8 @@ func (s UserService) Get(request *dto.GetUserRequest) (user *model.User, err err
 
 func (s UserService) GetByLogin(request *dto.GetUserByLoginRequest) (user *model.User, err error) {
 	if request.Login == "" {
-		return nil, fmt.Errorf("получение пользователя по логину: %w", err)
+		s.logger.Infof("ошибка get user by login %s: %s", request.Login, fmt.Errorf("ошибка логин пустой: %w", err))
+		return nil, fmt.Errorf("ошибка логин пустой: %w", err)
 	}
 
 	//ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -78,59 +87,98 @@ func (s UserService) GetByLogin(request *dto.GetUserByLoginRequest) (user *model
 		Login: request.Login,
 	})
 	if err != nil {
+		s.logger.Errorf("ошибка get user by login %s: %s", request.Login, fmt.Errorf("получение пользователя по логину: %w", err))
 		return nil, fmt.Errorf("получение пользователя по логину: %w", err)
 	}
 
 	return user, err
 }
 
-//func (s UserService) GetByLogin(login string) (user *domain.User, err error) {
-//	user, err = s.userRepo.GetByLogin(login)
-//	if err != nil {
-//		return nil, fmt.Errorf("получение пользователя по login: %w", err)
-//	}
-//
-//	return user, err
-//}
-
 func (s UserService) Update(request *dto.UpdateUserRequest) (err error) {
-	//reserves, err := s.reserveRepo.GetAll()
-	//if err != nil {
-	//	return fmt.Errorf("получение всех броней: %w", err)
-	//}
-	//
-	//for _, reserve := range reserves {
-	//	if reserve.int == user.Id {
-	//		return fmt.Errorf("нельзя обновить пользователя, тк на нее есть бронь")
-	//	}
-	//}
+
 	if request.Id < 1 {
+		s.logger.Infof("ошибка update user %d %s %s %s %s %s: %s",
+			request.Id,
+			request.Login,
+			request.Password,
+			request.FirstName,
+			request.SecondName,
+			request.ThirdName,
+			fmt.Errorf("получение пользователя по логину: %w", err))
 		return fmt.Errorf("id < 1: %w", err)
 	}
 
 	if request.Login == "" {
+		s.logger.Infof("ошибка update user %d %s %s %s %s %s: %s",
+			request.Id,
+			request.Login,
+			request.Password,
+			request.FirstName,
+			request.SecondName,
+			request.ThirdName,
+			fmt.Errorf("получение пользователя по логину: %w", err))
 		return fmt.Errorf("пустой логин: %w", err)
 	}
 
 	if request.Password == "" {
+		s.logger.Infof("ошибка update user %d %s %s %s %s %s: %s",
+			request.Id,
+			request.Login,
+			request.Password,
+			request.FirstName,
+			request.SecondName,
+			request.ThirdName,
+			fmt.Errorf("пустой пароль: %w", err))
 		return fmt.Errorf("пустой пароль: %w", err)
 	}
 
 	if request.FirstName == "" {
+		s.logger.Infof("ошибка update user %d %s %s %s %s %s: %s",
+			request.Id,
+			request.Login,
+			request.Password,
+			request.FirstName,
+			request.SecondName,
+			request.ThirdName,
+			fmt.Errorf("пустое имя %w", err))
 		return fmt.Errorf("пустое имя %w", err)
 	}
 
 	if request.SecondName == "" {
+		s.logger.Infof("ошибка update user %d %s %s %s %s %s: %s",
+			request.Id,
+			request.Login,
+			request.Password,
+			request.FirstName,
+			request.SecondName,
+			request.ThirdName,
+			fmt.Errorf("пустая фамилия %w", err))
 		return fmt.Errorf("пустая фамилия %w", err)
 	}
 
 	if request.ThirdName == "" {
+		s.logger.Infof("ошибка update user %d %s %s %s %s %s: %s",
+			request.Id,
+			request.Login,
+			request.Password,
+			request.FirstName,
+			request.SecondName,
+			request.ThirdName,
+			fmt.Errorf("пустое отчество %w", err))
 		return fmt.Errorf("пустое отчество %w", err)
 	}
 
 	hashedPassword, err := s.crypto.GenerateHashPass(request.Password)
 
 	if err != nil {
+		s.logger.Errorf("ошибка update user %d %s %s %s %s %s: %s",
+			request.Id,
+			request.Login,
+			request.Password,
+			request.FirstName,
+			request.SecondName,
+			request.ThirdName,
+			fmt.Errorf("генерация хэша: %w", err))
 		return fmt.Errorf("генерация хэша: %w", err)
 	}
 
@@ -146,6 +194,14 @@ func (s UserService) Update(request *dto.UpdateUserRequest) (err error) {
 		ThirdName:  request.ThirdName,
 	})
 	if err != nil {
+		s.logger.Errorf("ошибка update user %d %s %s %s %s %s: %s",
+			request.Id,
+			request.Login,
+			request.Password,
+			request.FirstName,
+			request.SecondName,
+			request.ThirdName,
+			fmt.Errorf("обновление пользователя %w", err))
 		return fmt.Errorf("обновление пользователя %w", err)
 	}
 
@@ -154,6 +210,7 @@ func (s UserService) Update(request *dto.UpdateUserRequest) (err error) {
 
 func (s UserService) Delete(request *dto.DeleteUserRequest) (err error) {
 	if request.Id < 1 {
+		s.logger.Infof("ошибка delete user %d: %s", request.Id, fmt.Errorf("неверный id: %w", err))
 		return fmt.Errorf("неверный id: %w", err)
 	}
 
@@ -164,6 +221,7 @@ func (s UserService) Delete(request *dto.DeleteUserRequest) (err error) {
 		Id: request.Id,
 	})
 	if err != nil {
+		s.logger.Errorf("ошибка delete user %d: %s", request.Id, fmt.Errorf("удаление пользователя: %w", err))
 		return fmt.Errorf("удаление пользователя: %w", err)
 	}
 

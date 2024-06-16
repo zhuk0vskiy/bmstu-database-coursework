@@ -1,21 +1,25 @@
 package impl
 
 import (
-	"app/src/internal/model"
-	"app/src/internal/model/dto"
-	repositoryInterface "app/src/internal/repository/interface"
-	serviceInterface "app/src/internal/service/interface"
 	"context"
 	"fmt"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model/dto"
+	repositoryInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/repository/interface"
+	serviceInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/service/interface"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/logger"
 )
 
 type ReserveService struct {
 	reserveRepo repositoryInterface.IReserveRepository
+	logger      logger.Interface
 }
 
 func NewReserveService(
+	logger logger.Interface,
 	reserveRepo repositoryInterface.IReserveRepository) serviceInterface.IReserveService {
 	return &ReserveService{
+		logger:      logger,
 		reserveRepo: reserveRepo,
 	}
 }
@@ -27,42 +31,45 @@ func (s ReserveService) GetAll(request *dto.GetAllReserveRequest) (equipments []
 	ctx := context.Background()
 	equipments, err = s.reserveRepo.GetAll(ctx, &dto.GetAllReserveRequest{})
 	if err != nil {
-		return nil, fmt.Errorf("удаление брони: %w", err)
+		s.logger.Errorf("ошибка get all reserve: %s", fmt.Errorf("получение всех броней: %w", err))
+		return nil, fmt.Errorf("получение всех броней: %w", err)
 	}
 
 	return equipments, err
 }
 
 func (s ReserveService) Add(request *dto.AddReserveRequest) (err error) {
-	// TODO: добавить транзакцию
-	//if request.EquipmentId == nil {
-	//	return fmt.Errorf("слайс оборудования пуст: %w", err)
-	//}
 
 	if request.ProducerId < 0 {
+		s.logger.Infof("ошибка add reserve: %s", fmt.Errorf("id продюсера меньше 0: %w", err))
 		return fmt.Errorf("id продюсера меньше 0: %w", err)
 	}
 
 	if request.RoomId < 1 {
+		s.logger.Infof("ошибка add reserve: %s", fmt.Errorf("id комнаты меньше 1: %w", err))
 		return fmt.Errorf("id комнаты меньше 1: %w", err)
 	}
 
 	if request.InstrumentalistId < 0 {
+		s.logger.Infof("ошибка add reserve: %s", fmt.Errorf("id инструменталиста меньше 0: %w", err))
 		return fmt.Errorf("id инструменталиста меньше 0: %w", err)
 	}
 
 	if request.UserId < 1 {
+		s.logger.Infof("ошибка add reserve: %s", fmt.Errorf("id пользователя меньше 1: %w", err))
 		return fmt.Errorf("id пользователя меньше 1: %w", err)
 	}
 
 	for _, equipment := range request.EquipmentId {
 		if equipment < 1 {
+			s.logger.Infof("ошибка add reserve: %s", fmt.Errorf("id оборудования меньше 1: %w", err))
 			return fmt.Errorf("id оборудования меньше 1: %w", err)
 		}
 	}
 
 	//if request.TimeInterval
 	if request.TimeInterval.StartTime.Unix() >= request.TimeInterval.EndTime.Unix() {
+		s.logger.Infof("ошибка add reserve: %s", fmt.Errorf("время начала больше времени конца: %w", err))
 		return fmt.Errorf("время начала больше времени конца: %w", err)
 	}
 
@@ -78,6 +85,7 @@ func (s ReserveService) Add(request *dto.AddReserveRequest) (err error) {
 		TimeInterval:      request.TimeInterval,
 	})
 	if err != nil {
+		s.logger.Errorf("ошибка add reserve: %s", fmt.Errorf("добавление брони: %w", err))
 		return fmt.Errorf("добавление брони: %w", err)
 	}
 
@@ -86,6 +94,7 @@ func (s ReserveService) Add(request *dto.AddReserveRequest) (err error) {
 
 func (s ReserveService) Delete(request *dto.DeleteReserveRequest) (err error) {
 	if request.Id < 1 {
+		s.logger.Infof("ошибка delete reserve: %s", fmt.Errorf("id меньше 1: %w", err))
 		return fmt.Errorf("id меньше 1: %w", err)
 	}
 
@@ -96,6 +105,7 @@ func (s ReserveService) Delete(request *dto.DeleteReserveRequest) (err error) {
 		Id: request.Id,
 	})
 	if err != nil {
+		s.logger.Errorf("ошибка delete reserve: %s", fmt.Errorf("удаление брони: %w", err))
 		return fmt.Errorf("удаление брони: %w", err)
 	}
 

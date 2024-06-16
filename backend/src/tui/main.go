@@ -1,18 +1,18 @@
 package tui
 
 import (
-	"app/src/config"
-	"app/src/internal/model"
-	"app/src/internal/model/dto"
-	"app/src/internal/repository/impl/postgresql"
-	serviceImpl "app/src/internal/service/impl"
-	serviceInterface "app/src/internal/service/interface"
-	"app/src/pkg/base"
-	"app/src/pkg/logger"
-	"app/src/pkg/time_parser"
 	"fmt"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rivo/tview"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/config"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model/dto"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/repository/impl/postgresql"
+	serviceImpl "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/service/impl"
+	serviceInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/service/interface"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/base"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/logger"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/time_parser"
 	"log"
 	"strconv"
 	"strings"
@@ -44,14 +44,14 @@ func NewApp(db *pgxpool.Pool, cfg *config.Config, logger logger.Interface) *App 
 	crypto := base.NewHashCrypto()
 
 	authSvc := serviceImpl.NewAuthService(logger, userRepo, crypto, cfg.JwtKey)
-	userSvc := serviceImpl.NewUserService(userRepo, reserveRepo, crypto)
-	studioSvc := serviceImpl.NewStudioService(studioRepo)
+	userSvc := serviceImpl.NewUserService(logger, userRepo, reserveRepo, crypto)
+	studioSvc := serviceImpl.NewStudioService(logger, studioRepo)
 	roomSvc := serviceImpl.NewRoomService(roomRepo, reserveRepo)
-	producerSvc := serviceImpl.NewProducerService(producerRepo, reserveRepo)
+	producerSvc := serviceImpl.NewProducerService(logger, producerRepo, reserveRepo)
 	instrumentalistSvc := serviceImpl.NewInstrumentalistService(logger, instrumentalistRepo, reserveRepo)
 	equipmentSvc := serviceImpl.NewEquipmentService(logger, equipmentRepo, reserveRepo)
-	reserveSvc := serviceImpl.NewReserveService(reserveRepo)
-	validateTimeSvc := serviceImpl.NewValidateTimeService(roomRepo, equipmentRepo, producerRepo, instrumentalistRepo, reserveRepo)
+	reserveSvc := serviceImpl.NewReserveService(logger, reserveRepo)
+	validateTimeSvc := serviceImpl.NewValidateTimeService(logger, roomRepo, equipmentRepo, producerRepo, instrumentalistRepo, reserveRepo)
 
 	return &App{
 		AuthSvc:            authSvc,

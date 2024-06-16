@@ -1,30 +1,35 @@
 package impl
 
 import (
-	"app/src/internal/model"
-	"app/src/internal/model/dto"
-	repositoryInterface "app/src/internal/repository/interface"
-	serviceInterface "app/src/internal/service/interface"
 	"context"
 	"fmt"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model/dto"
+	repositoryInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/repository/interface"
+	serviceInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/service/interface"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/logger"
 )
 
 type StudioService struct {
 	studioRepo repositoryInterface.IStudioRepository
+	logger     logger.Interface
 }
 
-func NewStudioService(studioRepo repositoryInterface.IStudioRepository) serviceInterface.IStudioService {
+func NewStudioService(logger logger.Interface, studioRepo repositoryInterface.IStudioRepository) serviceInterface.IStudioService {
 	return &StudioService{
+		logger:     logger,
 		studioRepo: studioRepo,
 	}
 }
 
 func (s StudioService) Update(request *dto.UpdateStudioRequest) (err error) {
 	if request.Id < 1 {
+		s.logger.Infof("ошибка update studio: %s", fmt.Errorf("неправильный id: %w", err))
 		return fmt.Errorf("неправильный id: %w", err)
 	}
 
 	if request.Name == "" {
+		s.logger.Infof("ошибка update studio: %s", fmt.Errorf("пустое название: %w", err))
 		return fmt.Errorf("пустое название: %w", err)
 	}
 
@@ -36,6 +41,7 @@ func (s StudioService) Update(request *dto.UpdateStudioRequest) (err error) {
 		Name: request.Name,
 	})
 	if err != nil {
+		s.logger.Errorf("ошибка update studio: %s", fmt.Errorf("обновление студии: %w", err))
 		return fmt.Errorf("обновление студии: %w", err)
 	}
 
@@ -44,6 +50,7 @@ func (s StudioService) Update(request *dto.UpdateStudioRequest) (err error) {
 
 func (s StudioService) Get(request *dto.GetStudioRequest) (studio *model.Studio, err error) {
 	if request.Id < 1 {
+		s.logger.Infof("ошибка get studio: %s", fmt.Errorf("неверный id: %w", err))
 		return nil, fmt.Errorf("неверный id: %w", err)
 	}
 
@@ -55,6 +62,7 @@ func (s StudioService) Get(request *dto.GetStudioRequest) (studio *model.Studio,
 	})
 
 	if err != nil {
+		s.logger.Errorf("ошибка get studio: %s", fmt.Errorf("получение студии по id: %w", err))
 		return nil, fmt.Errorf("получение студии по id: %w", err)
 	}
 
@@ -69,6 +77,7 @@ func (s StudioService) GetAll(request *dto.GetStudioAllRequest) (studios []*mode
 	studios, err = s.studioRepo.GetAll(ctx, &dto.GetStudioAllRequest{})
 
 	if err != nil {
+		s.logger.Errorf("ошибка get all studio: %s", fmt.Errorf("получение студий по id: %w", err))
 		return nil, fmt.Errorf("получение студий по id: %w", err)
 	}
 
@@ -78,6 +87,7 @@ func (s StudioService) GetAll(request *dto.GetStudioAllRequest) (studios []*mode
 func (s StudioService) Add(request *dto.AddStudioRequest) (err error) {
 
 	if request.Name == "" {
+		s.logger.Infof("ошибка add studio: %s", fmt.Errorf("пустое имя: %w", err))
 		return fmt.Errorf("пустое имя: %w", err)
 	}
 
@@ -89,6 +99,7 @@ func (s StudioService) Add(request *dto.AddStudioRequest) (err error) {
 	})
 
 	if err != nil {
+		s.logger.Errorf("ошибка add studio: %s", fmt.Errorf("добавление студии: %w", err))
 		return fmt.Errorf("добавление студии: %w", err)
 	}
 
@@ -97,6 +108,7 @@ func (s StudioService) Add(request *dto.AddStudioRequest) (err error) {
 
 func (s StudioService) Delete(request *dto.DeleteStudioRequest) (err error) {
 	if request.Id < 1 {
+		s.logger.Infof("ошибка add studio: %s", fmt.Errorf("неверный id: %w", err))
 		return fmt.Errorf("неверный id: %w", err)
 	}
 
@@ -108,6 +120,7 @@ func (s StudioService) Delete(request *dto.DeleteStudioRequest) (err error) {
 	})
 
 	if err != nil {
+		s.logger.Errorf("ошибка add studio: %s", fmt.Errorf("удаление студии по id: %w", err))
 		return fmt.Errorf("удаление студии по id: %w", err)
 	}
 

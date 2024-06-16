@@ -1,16 +1,18 @@
 package impl
 
 import (
-	"app/src/internal/model"
-	"app/src/internal/model/dto"
-	repositoryInterface "app/src/internal/repository/interface"
-	serviceInterface "app/src/internal/service/interface"
 	"context"
 	"fmt"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model/dto"
+	repositoryInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/repository/interface"
+	serviceInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/service/interface"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/logger"
 	"slices"
 )
 
 type ValidateTimeService struct {
+	logger              logger.Interface
 	roomRepo            repositoryInterface.IRoomRepository
 	equipmentRepo       repositoryInterface.IEquipmentRepository
 	producerRepo        repositoryInterface.IProducerRepository
@@ -20,6 +22,7 @@ type ValidateTimeService struct {
 }
 
 func NewValidateTimeService(
+	logger logger.Interface,
 	roomRepo repositoryInterface.IRoomRepository,
 	equipmentRepo repositoryInterface.IEquipmentRepository,
 	producerRepo repositoryInterface.IProducerRepository,
@@ -28,6 +31,7 @@ func NewValidateTimeService(
 	// reservedEquipmentRepo repositoryInterface.IReservedEquipmentRepository,
 ) serviceInterface.IValidateTimeService {
 	return &ValidateTimeService{
+		logger:              logger,
 		roomRepo:            roomRepo,
 		equipmentRepo:       equipmentRepo,
 		producerRepo:        producerRepo,
@@ -45,6 +49,7 @@ func (s ValidateTimeService) GetSuitableStuff(request *dto.GetSuitableStuffReque
 	err error) {
 
 	if request.StudioId < 1 {
+		s.logger.Infof("ошибка get suitable stuff by studio id %d: %s", request.StudioId, fmt.Errorf("id студии меньше 1"))
 		return nil, nil, nil, nil, fmt.Errorf("id студии меньше 1")
 	}
 
@@ -55,6 +60,7 @@ func (s ValidateTimeService) GetSuitableStuff(request *dto.GetSuitableStuffReque
 		StudioId:        request.StudioId,
 	})
 	if err != nil {
+		s.logger.Errorf("ошибка get suitable stuff by studio id %d: %s", request.StudioId, fmt.Errorf("поиск доступных комнат"))
 		return nil,
 			nil,
 			nil,
@@ -67,6 +73,7 @@ func (s ValidateTimeService) GetSuitableStuff(request *dto.GetSuitableStuffReque
 		StudioId:        request.StudioId,
 	})
 	if err != nil {
+		s.logger.Errorf("ошибка get suitable stuff by studio id %d: %s", request.StudioId, fmt.Errorf("поиск доступного оборудования"))
 		return nil, nil, nil, nil, fmt.Errorf("поиск доступного оборудования")
 	}
 
@@ -75,6 +82,7 @@ func (s ValidateTimeService) GetSuitableStuff(request *dto.GetSuitableStuffReque
 		StudioId:        request.StudioId,
 	})
 	if err != nil {
+		s.logger.Errorf("ошибка get suitable stuff by studio id %d: %s", request.StudioId, fmt.Errorf("поиск доступного продюсера"))
 		return nil, nil, nil, nil, fmt.Errorf("поиск доступного продюсера")
 	}
 
@@ -83,6 +91,7 @@ func (s ValidateTimeService) GetSuitableStuff(request *dto.GetSuitableStuffReque
 		StudioId:        request.StudioId,
 	})
 	if err != nil {
+		s.logger.Errorf("ошибка get suitable stuff by studio id %d: %s", request.StudioId, fmt.Errorf("поиск доступного инструменталиста"))
 		return nil, nil, nil, nil, fmt.Errorf("поиск доступного инструменталиста")
 	}
 
@@ -92,6 +101,7 @@ func (s ValidateTimeService) GetSuitableStuff(request *dto.GetSuitableStuffReque
 func (s ValidateTimeService) getNotReservedRooms(ctx context.Context, request *dto.GetNotReservedRoomsRequest) (notReservedRooms []*model.Room, err error) {
 
 	if request.StudioId <= 0 {
+		s.logger.Infof("ошибка get not reserved rooms by studio id %d: %s", request.StudioId, fmt.Errorf("id студии меньше 1"))
 		return nil, fmt.Errorf("id студии меньше 1")
 	}
 
@@ -104,6 +114,7 @@ func (s ValidateTimeService) getNotReservedRooms(ctx context.Context, request *d
 		StudioId: request.StudioId,
 	})
 	if err != nil {
+		s.logger.Errorf("ошибка get not reserved rooms by studio id %d: %s", request.StudioId, fmt.Errorf("get all rooms error"))
 		return nil, fmt.Errorf("get all rooms error")
 	}
 
@@ -114,8 +125,9 @@ func (s ValidateTimeService) getNotReservedRooms(ctx context.Context, request *d
 
 		if int64(request.ChoosenInterval.StartTime.Hour()) >= room.StartHour &&
 			int64(request.ChoosenInterval.EndTime.Hour()) <= room.EndHour {
-			reserves, err := s.reserveRepo.GetByRoomId(ctx, &dto.GetReserveByRoomIdRequest{RoomId: room.Id}) //TODO: спросить, нормально ли бегать в бд при каждой итерации
+			reserves, err := s.reserveRepo.GetByRoomId(ctx, &dto.GetReserveByRoomIdRequest{RoomId: room.Id})
 			if err != nil {
+				s.logger.Errorf("ошибка get not reserved rooms by studio id %d: %s", request.StudioId, fmt.Errorf("get all reserves error"))
 				return nil, fmt.Errorf("get all reserves error")
 			}
 			for _, reserve := range reserves {
@@ -127,7 +139,6 @@ func (s ValidateTimeService) getNotReservedRooms(ctx context.Context, request *d
 			}
 			if reserveFlag == false {
 				notReservedRooms = append(notReservedRooms, room)
-				//fmt.Println("=================", room)
 			}
 		}
 	}
@@ -137,9 +148,9 @@ func (s ValidateTimeService) getNotReservedRooms(ctx context.Context, request *d
 }
 
 func (s ValidateTimeService) getNotReservedProducers(ctx context.Context, request *dto.GetNotReservedProducersRequest) (notReservedProducers []*model.Producer, err error) {
-	//TODO: сделать возможность обработки броней переходящих через 00:00
 
 	if request.StudioId <= 0 {
+		s.logger.Infof("ошибка get not reserved producers by studio id %d: %s", request.StudioId, fmt.Errorf("id студии меньше 1"))
 		return nil, fmt.Errorf("id студии меньше 1")
 	}
 
@@ -147,6 +158,7 @@ func (s ValidateTimeService) getNotReservedProducers(ctx context.Context, reques
 		StudioId: request.StudioId,
 	})
 	if err != nil {
+		s.logger.Errorf("ошибка get not reserved producers by studio id %d: %s", request.StudioId, fmt.Errorf("get all rooms error"))
 		return nil, fmt.Errorf("get all rooms error")
 	}
 
@@ -157,6 +169,7 @@ func (s ValidateTimeService) getNotReservedProducers(ctx context.Context, reques
 			int64(request.ChoosenInterval.EndTime.Hour()) <= producer.EndHour {
 			reserves, err := s.reserveRepo.GetByProducerId(ctx, &dto.GetReserveByProducerIdRequest{ProducerId: producer.Id}) //TODO: спросить, нормально ли бегать в бд при каждой итерации
 			if err != nil {
+				s.logger.Errorf("ошибка get not reserved producers by studio id %d: %s", request.StudioId, fmt.Errorf("get all reserves error"))
 				return nil, fmt.Errorf("get all reserves error")
 			}
 			for _, reserve := range reserves {
@@ -164,16 +177,6 @@ func (s ValidateTimeService) getNotReservedProducers(ctx context.Context, reques
 					reserveFlag = true
 					break
 				}
-				//reserveStartHour := int64(reserve.StartTime.Hour())
-				//reserveEndHour := int64(reserve.EndTime.Hour())
-				//
-				////fmt.Println("	looking reserve:", reserve.Id)
-				//if (choosenStartHour >= reserveStartHour && choosenStartHour < reserveEndHour) ||
-				//	(choosenEndHour <= reserveEndHour && choosenEndHour > reserveStartHour) ||
-				//	(choosenStartHour <= reserveStartHour && choosenEndHour >= reserveEndHour) {
-				//	reserveFlag = true
-				//	break
-				//}
 			}
 			if reserveFlag == false {
 				notReservedProducers = append(notReservedProducers, producer)
@@ -191,20 +194,16 @@ func (s ValidateTimeService) getNotReservedProducers(ctx context.Context, reques
 func (s ValidateTimeService) getNotReservedInstrumentalists(ctx context.Context, request *dto.GetNotReservedInstrumentalistsRequest) (notReservedInstrumentalists []*model.Instrumentalist, err error) {
 
 	if request.StudioId <= 0 {
+		s.logger.Infof("ошибка get not reserved instrumentaists by studio id %d: %s", request.StudioId, fmt.Errorf("id студии меньше 1"))
 		return nil, fmt.Errorf("id студии меньше 1")
 	}
-
-	//if request.StartTime.Unix() >= request.EndTime.Unix() {
-	//	return nil, fmt.Errorf("время начала больше времени конца: %w", err)
-	//}
-	//
-	//choosenStartHour := int64(request.StartTime.Hour())
-	//choosenEndHour := int64(request.EndTime.Hour())
 
 	instrumentalists, err := s.instrumentalistRepo.GetByStudio(ctx, &dto.GetInstrumentalistByStudioRequest{
 		StudioId: request.StudioId,
 	})
+
 	if err != nil {
+		s.logger.Errorf("ошибка get not reserved instrumentaists by studio id %d: %s", request.StudioId, fmt.Errorf("get all rooms error"))
 		return nil, fmt.Errorf("get all rooms error")
 	}
 
@@ -216,6 +215,7 @@ func (s ValidateTimeService) getNotReservedInstrumentalists(ctx context.Context,
 			int64(request.ChoosenInterval.EndTime.Hour()) <= instrumentalist.EndHour {
 			reserves, err := s.reserveRepo.GetByInstrumentalistId(ctx, &dto.GetReserveByInstrumentalistIdRequest{InstrumentalistId: instrumentalist.Id}) //TODO: спросить, нормально ли бегать в бд при каждой итерации
 			if err != nil {
+				s.logger.Errorf("ошибка get not reserved instrumentaists by studio id %d: %s", request.StudioId, fmt.Errorf("get all reserves error"))
 				return nil, fmt.Errorf("get all reserves error")
 			}
 			for _, reserve := range reserves {
@@ -249,11 +249,13 @@ func (s ValidateTimeService) getNotReservedEquipments(ctx context.Context, reque
 	notReservedEquipments = make([][]*model.Equipment, 0)
 
 	if request.StudioId <= 0 {
+		s.logger.Infof("ошибка get not reserved equipments by studio id %d: %s", request.StudioId, fmt.Errorf("id студии меньше 1"))
 		return nil, fmt.Errorf("id студии меньше 1")
 	}
 
 	if request.ChoosenInterval.StartTime.Unix() >= request.ChoosenInterval.EndTime.Unix() {
-		return nil, fmt.Errorf("")
+		s.logger.Infof("ошибка get not reserved equipments by studio id %d: %s", request.StudioId, fmt.Errorf("время начала больше или равно времени конца"))
+		return nil, fmt.Errorf("время начала больше или равно времени конца")
 	}
 
 	for equipmentType := int64(model.OutOfFirstEquipment + 1); equipmentType < int64(model.OutOfLastEquipment); equipmentType++ {
@@ -268,11 +270,7 @@ func (s ValidateTimeService) getNotReservedEquipments(ctx context.Context, reque
 					StartTime: request.ChoosenInterval.StartTime,
 					EndTime:   request.ChoosenInterval.EndTime,
 				},
-			}) //select id, name, ... from equipments eq join reserved-eq r_eq with eq.id == r_eq.equipment_id where
-		// Делаем запрос с between: select ... from reserved_equipment where year(date) between ...
-		// Делаем крутой запрос в бд, в котором сначала ищем id в табличке бронь-оборудование, потом идем в таблицу оборужования и сравниваем id. Выбираем тех, чьи id не совпали
-		// Запрос с джоином. выводим все оборудование с типом и студией из т оборудования + время брони, если оно забронированно
-
+			})
 		for _, equipmentAndTime := range equipmentsAndTimes {
 			if isIntervalsIntersect(*equipmentAndTime.TimeInterval, *request.ChoosenInterval) == false {
 				notFullTimeFreeEquipments = append(notFullTimeFreeEquipments, equipmentAndTime.Equipment)
@@ -280,21 +278,9 @@ func (s ValidateTimeService) getNotReservedEquipments(ctx context.Context, reque
 		}
 
 		if err != nil {
-			//logrus.WithFields(logrus.Fields{
-			//	"Internal":  "Service.validate_time",
-			//	"Event":     "GetReservedByStudioAndType",
-			//	"StudioId":  request.StudioId,
-			//	"Type":      equipmentType,
-			//	"StartTime": request.StartTime,
-			//	"EndTime":   request.EndTime,
-			//	"Error":     err,
-			//}).Error("Ошибка получения забронированного оборудования по студии и типу из репозитория")
-			return nil, fmt.Errorf("ошибка получения не аолностью забронированного оборудования по студии и типу из репозитория: %w", err)
+			s.logger.Errorf("ошибка get not reserved equipments by studio id %d: %s", request.StudioId, fmt.Errorf("ошибка получения не полностью свободного оборудования по студии и типу из репозитория: %w", err))
+			return nil, fmt.Errorf("ошибка получения не полностью забронированного оборудования по студии и типу из репозитория: %w", err)
 		}
-		//for i, _ := range notFullTimeFreeEquipments {
-		//	fmt.Println(*notFullTimeFreeEquipments[i])
-		//}
-		//fmt.Println("11")
 
 		fullTimeFreeEquipments, err := s.equipmentRepo.GetFullTimeFreeByStudioAndType(
 			ctx,
@@ -303,54 +289,16 @@ func (s ValidateTimeService) getNotReservedEquipments(ctx context.Context, reque
 				Type:     equipmentType,
 			})
 
-		//for i, _ := range fullTimeFreeEquipments {
-		//	fmt.Println(*fullTimeFreeEquipments[i])
-		//}
 		if err != nil {
-			//logrus.WithFields(logrus.Fields{
-			//	"Internal":  "Service.validate_time",
-			//	"Event":     "GetByStudioAndType",
-			//	"StudioId":  request.StudioId,
-			//	"Type":      equipmentType,
-			//	"StartTime": request.StartTime,
-			//	"EndTime":   request.EndTime,
-			//	"Error":     err,
-			//}).Error("Ошибка получения полностью свободного оборудования оборудования по студии и типу из репозитория")
+			s.logger.Errorf("ошибка get not reserved equipments by studio id %d: %s", request.StudioId, fmt.Errorf("ошибка получения полностью свободного оборудования по студии и типу из репозитория: %w", err))
 			return nil, fmt.Errorf("ошибка получения полностью свободного оборудования по студии и типу из репозитория: %w", err)
 		}
 
 		notFullTimeFreeEquipments = slices.Concat(notFullTimeFreeEquipments, fullTimeFreeEquipments)
-		//if len(notFullTimeFreeEquipments) != 0 {
-		//	for i, _ := range notFullTimeFreeEquipments {
-		//		fullTimeFreeEquipments = append(fullTimeFreeEquipments, notFullTimeFreeEquipments[i])
-		//	}
-		//}
 
-		//for i, _ := range notFullTimeFreeEquipments {
-		//	fmt.Println("****", notFullTimeFreeEquipments[i])
-		//}
-
-		//fullTimeFreeEquipments
-		//fmt.Println("--++")
 		notReservedEquipments = append(notReservedEquipments, notFullTimeFreeEquipments)
-		//for i, _ := range notReservedEquipments[equipmentType-1] {
-		//	notReservedEquipments[equipmentType-1] = append(notReservedEquipments[equipmentType-1], fullTimeFreeEquipments[i])
-		//}
-		//fmt.Println("--++")
-		//notReservedEquipments[equipmentType-1] = append(notReservedEquipments[equipmentType-1], slices.Concat(fullTimeFreeEquipments, notFullTimeFreeEquipments))
-		//for i, _ := range notReservedEquipments {
-		//	for j, _ := range notReservedEquipments[i] {
-		//		fmt.Println("----", *notReservedEquipments[i][j])
-		//	}
-		//}
-		//fmt.Println(notReservedEquipments)
-	}
 
-	//for i, _ := range notReservedEquipments {
-	//	for j, _ := range notReservedEquipments[i] {
-	//		fmt.Println("=====", i, *notReservedEquipments[i][j])
-	//	}
-	//}
+	}
 
 	return notReservedEquipments, err
 }

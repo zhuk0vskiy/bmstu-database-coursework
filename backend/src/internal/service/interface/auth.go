@@ -1,7 +1,7 @@
 package _interface
 
 import (
-	"app/src/internal/model/dto"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model/dto"
 )
 
 type IAuthService interface {

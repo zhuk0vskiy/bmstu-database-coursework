@@ -1,23 +1,27 @@
 package impl
 
 import (
-	"app/src/internal/model"
-	"app/src/internal/model/dto"
-	repositoryInterface "app/src/internal/repository/interface"
-	serviceInterface "app/src/internal/service/interface"
 	"context"
 	"fmt"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model/dto"
+	repositoryInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/repository/interface"
+	serviceInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/service/interface"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/logger"
 )
 
 type ProducerService struct {
 	producerRepo repositoryInterface.IProducerRepository
 	reserveRepo  repositoryInterface.IReserveRepository
+	logger       logger.Interface
 }
 
 func NewProducerService(
+	logger logger.Interface,
 	producerRepo repositoryInterface.IProducerRepository,
 	reserveRepo repositoryInterface.IReserveRepository) serviceInterface.IProducerService {
 	return &ProducerService{
+		logger:       logger,
 		producerRepo: producerRepo,
 		reserveRepo:  reserveRepo,
 	}
@@ -25,6 +29,7 @@ func NewProducerService(
 
 func (s ProducerService) GetByStudio(request *dto.GetProducerByStudioRequest) (producers []*model.Producer, err error) {
 	if request.StudioId < 1 {
+		s.logger.Infof("ошибка get producer by studio: %s", fmt.Errorf("неверный id: %w", err))
 		return nil, fmt.Errorf("неверный id: %w", err)
 	}
 
@@ -35,6 +40,7 @@ func (s ProducerService) GetByStudio(request *dto.GetProducerByStudioRequest) (p
 	})
 
 	if err != nil {
+		s.logger.Errorf("ошибка get producer by studio: %s", fmt.Errorf("получение продюсеров по студии: %w", err))
 		return nil, fmt.Errorf("получение продюсеров по студии: %w", err)
 	}
 	return producers, err
@@ -42,6 +48,7 @@ func (s ProducerService) GetByStudio(request *dto.GetProducerByStudioRequest) (p
 
 func (s ProducerService) Get(request *dto.GetProducerRequest) (producer *model.Producer, err error) {
 	if request.Id < 1 {
+		s.logger.Infof("ошибка get producer by id: %s", fmt.Errorf("неверный id: %w", err))
 		return nil, fmt.Errorf("неверный id: %w", err)
 	}
 
@@ -52,24 +59,16 @@ func (s ProducerService) Get(request *dto.GetProducerRequest) (producer *model.P
 	})
 
 	if err != nil {
+		s.logger.Errorf("ошибка get producer by id: %s", fmt.Errorf("получение продюсера по id: %w", err))
 		return nil, fmt.Errorf("получение продюсера по id: %w", err)
 	}
 
 	return producer, err
 }
 
-//func (s ProducerService) GetAll() (producers []*domain.Producer, err error) {
-//	producers, err = s.producerRepo.GetAll()
-//
-//	if err != nil {
-//		return nil, fmt.Errorf("получение всех продюсеров: %w", err)
-//	}
-//
-//	return producers, nil
-//}
-
 func (s ProducerService) Update(request *dto.UpdateProducerRequest) (err error) {
 	if request.Id < 1 {
+		s.logger.Infof("ошибка update producer: %s", fmt.Errorf("неверный id: %w", err))
 		return fmt.Errorf("неверный id: %w", err)
 	}
 
@@ -79,29 +78,35 @@ func (s ProducerService) Update(request *dto.UpdateProducerRequest) (err error) 
 		ProducerId: request.Id,
 	})
 	if err != nil {
+		s.logger.Errorf("ошибка update producer: %s", fmt.Errorf("получение всех броней: %w", err))
 		return fmt.Errorf("получение всех броней: %w", err)
 	}
 
 	if isReserve == true {
+		s.logger.Infof("ошибка update producer: %s", fmt.Errorf("нельзя обновить продюсера, тк на него есть бронь: %w", err))
 		return fmt.Errorf("нельзя обновить продюсера, тк на него есть бронь: %w", err)
 	}
 
 	if request.Name == "" {
+		s.logger.Infof("ошибка update producer: %s", fmt.Errorf("пустое имя: %w", err))
 		return fmt.Errorf("пустое имя: %w", err)
 	}
 
 	if request.StudioId < 0 {
+		s.logger.Infof("ошибка update producer: %s", fmt.Errorf("id студии меньше 0"))
 		return fmt.Errorf("id студии меньше 0")
 	}
 	//
 	//if request.StartTime.s
 
 	if request.StartHour == request.EndHour {
+		s.logger.Infof("ошибка update producer: %s", fmt.Errorf("время начала работы равно времени конца"))
 		return fmt.Errorf("время начала работы равно времени конца")
 	}
 
 	if request.EndHour > 23 || request.StartHour > 23 ||
 		request.EndHour < 0 || request.StartHour < 0 {
+		s.logger.Infof("ошибка update producer: %s", fmt.Errorf("время конца/начала работы не входит в размер суток (от 00 до 23)"))
 		return fmt.Errorf("время конца/начала работы не входит в размер суток (от 00 до 23)")
 	}
 
@@ -113,6 +118,7 @@ func (s ProducerService) Update(request *dto.UpdateProducerRequest) (err error) 
 		EndHour:   request.EndHour,
 	})
 	if err != nil {
+		s.logger.Errorf("ошибка update producer: %s", fmt.Errorf("обновление продюсера: %w", err))
 		return fmt.Errorf("обновление продюсера: %w", err)
 	}
 
@@ -122,19 +128,23 @@ func (s ProducerService) Update(request *dto.UpdateProducerRequest) (err error) 
 func (s ProducerService) Add(request *dto.AddProducerRequest) (err error) {
 
 	if request.Name == "" {
+		s.logger.Infof("ошибка add producer: %s", fmt.Errorf("пустое имя: %w", err))
 		return fmt.Errorf("пустое имя: %w", err)
 	}
 
 	if request.StudioId < 1 {
+		s.logger.Infof("ошибка add producer: %s", fmt.Errorf("id студии меньше 0"))
 		return fmt.Errorf("id студии меньше 0")
 	}
 
 	if request.StartHour == request.EndHour {
+		s.logger.Infof("ошибка add producer: %s", fmt.Errorf("время начала работы равно времени конца"))
 		return fmt.Errorf("время начала работы равно времени конца")
 	}
 
 	if request.EndHour > 23 || request.StartHour > 23 ||
 		request.StartHour < 0 || request.EndHour < 0 {
+		s.logger.Infof("ошибка add producer: %s", fmt.Errorf("время конца/начала работы не входит в размер суток (от 00 до 23)"))
 		return fmt.Errorf("время конца/начала работы не входит в размер суток (от 00 до 23)")
 	}
 
@@ -147,6 +157,7 @@ func (s ProducerService) Add(request *dto.AddProducerRequest) (err error) {
 		EndHour:   request.EndHour,
 	})
 	if err != nil {
+		s.logger.Errorf("ошибка add producer: %s", fmt.Errorf("добавление продюсера: %w", err))
 		return fmt.Errorf("добавление продюсера: %w", err)
 	}
 
@@ -155,6 +166,7 @@ func (s ProducerService) Add(request *dto.AddProducerRequest) (err error) {
 
 func (s ProducerService) Delete(request *dto.DeleteProducerRequest) (err error) {
 	if request.Id < 1 {
+		s.logger.Infof("ошибка delete producer: %s", fmt.Errorf("неверный id: %w", err))
 		return fmt.Errorf("неверный id: %w", err)
 	}
 
@@ -165,6 +177,7 @@ func (s ProducerService) Delete(request *dto.DeleteProducerRequest) (err error) 
 	})
 
 	if err != nil {
+		s.logger.Errorf("ошибка delete producer: %s", fmt.Errorf("удаление продюсера: %w", err))
 		return fmt.Errorf("удаление продюсера: %w", err)
 	}
 
