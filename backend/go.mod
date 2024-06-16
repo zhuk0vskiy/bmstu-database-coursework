@@ -1,4 +1,4 @@
-module app
+module github.com/zhuk0vskiy/bmstu-database-coursework/backend
 
 go 1.22.0
 
