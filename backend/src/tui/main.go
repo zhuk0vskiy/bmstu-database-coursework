@@ -48,7 +48,7 @@ func NewApp(db *pgxpool.Pool, cfg *config.Config, logger logger.Interface) *App 
 	studioSvc := serviceImpl.NewStudioService(studioRepo)
 	roomSvc := serviceImpl.NewRoomService(roomRepo, reserveRepo)
 	producerSvc := serviceImpl.NewProducerService(producerRepo, reserveRepo)
-	instrumentalistSvc := serviceImpl.NewInstrumentalistService(instrumentalistRepo, reserveRepo)
+	instrumentalistSvc := serviceImpl.NewInstrumentalistService(logger, instrumentalistRepo, reserveRepo)
 	equipmentSvc := serviceImpl.NewEquipmentService(logger, equipmentRepo, reserveRepo)
 	reserveSvc := serviceImpl.NewReserveService(reserveRepo)
 	validateTimeSvc := serviceImpl.NewValidateTimeService(roomRepo, equipmentRepo, producerRepo, instrumentalistRepo, reserveRepo)
