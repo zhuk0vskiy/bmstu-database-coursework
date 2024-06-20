@@ -11,39 +11,12 @@ import (
 	"os"
 )
 
-//func main() {
-//	cfg, err := config.ReadConfig()
-//	if err != nil {
-//		log.Fatalln(err)
-//	}
-//
-//	pool, err := newConn(context.Background(), &cfg.DBConfig)
-//	if err != nil {
-//		log.Fatalln(err)
-//	}
-//
-//	app := app.NewApp(pool, cfg)
-//	termui := tui.NewTUI(app)
-//
-//	err = termui.Run()
-//	if err != nil {
-//		log.Fatalln(err)
-//	}
-//}
-
 func main() {
 	ctx := context.Background()
 	c, err := config.NewConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	db, err := newConn(ctx, &c.Database)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	fmt.Println(1)
-
 	// Create logger
 
 	loggerFile, err := os.OpenFile(
@@ -62,6 +35,12 @@ func main() {
 	}(loggerFile)
 
 	l := logger.New(c.Logger.Level, loggerFile)
+
+	db, err := newConn(ctx, &c.Database)
+	if err != nil {
+		l.Fatalf("failed to connect to database: %v", err)
+	}
+	fmt.Println(1)
 
 	tui.Run(db, c, l)
 }

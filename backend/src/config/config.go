@@ -4,7 +4,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-const configPath = "src/config/config.yml"
+const configPath = "backend/src/config/config.yml"
 
 type Config struct {
 	Logger   LoggerConfig   `yaml:"logger"`
