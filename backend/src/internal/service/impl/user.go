@@ -51,6 +51,8 @@ func (s UserService) GetReserves(request *dto.GetUserReservesRequest) (reserves 
 		return nil, fmt.Errorf("получение всех броней: %w", err)
 	}
 
+	s.logger.Infof("пользователь %d вывел все брони", request.Id)
+
 	return reserves, nil
 }
 

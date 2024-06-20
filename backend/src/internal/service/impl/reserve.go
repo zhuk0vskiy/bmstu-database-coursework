@@ -89,6 +89,14 @@ func (s ReserveService) Add(request *dto.AddReserveRequest) (err error) {
 		return fmt.Errorf("добавление брони: %w", err)
 	}
 
+	s.logger.Infof("пользователь %d создал бронь на комнату %d, оборудование %d, продюсера %d, инструменталиста %d",
+		request.UserId,
+		request.RoomId,
+		request.EquipmentId,
+		request.ProducerId,
+		request.InstrumentalistId,
+	)
+
 	return err
 }
 
@@ -108,6 +116,8 @@ func (s ReserveService) Delete(request *dto.DeleteReserveRequest) (err error) {
 		s.logger.Errorf("ошибка delete reserve: %s", fmt.Errorf("удаление брони: %w", err))
 		return fmt.Errorf("удаление брони: %w", err)
 	}
+
+	s.logger.Infof("удаление брони %d", request.Id)
 
 	return err
 }

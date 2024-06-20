@@ -74,6 +74,7 @@ func (s AuthService) SignIn(request *dto.SignInRequest) (err error) {
 		s.logger.Errorf("ошибка при регистрации пользователя: %s", err.Error())
 		return fmt.Errorf("регистрация пользователя: %w", err)
 	}
+	s.logger.Infof("пользователь %s зарегистрировался", request.Login)
 
 	return err
 }
@@ -109,6 +110,8 @@ func (s AuthService) LogIn(request *dto.LogInRequest) (token string, err error) 
 		s.logger.Errorf("ошибка при регистрации пользователя %d: %s", user.Id, err.Error())
 		return "", fmt.Errorf("генерация токена: %w", err)
 	}
+
+	s.logger.Infof("пользователь %s вошел", request.Login)
 
 	return token, err
 }
