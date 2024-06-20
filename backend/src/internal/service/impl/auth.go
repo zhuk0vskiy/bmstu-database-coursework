@@ -101,7 +101,7 @@ func (s AuthService) LogIn(request *dto.LogInRequest) (token string, err error) 
 	}
 
 	if !s.crypto.CheckPasswordHash(request.Password, user.Password) {
-		s.logger.Infof("ошибка при регистрации пользователя %d: %s", user.Id, fmt.Errorf("неверный пароль"))
+		s.logger.Warnf("ошибка при регистрации пользователя %d: %s", user.Id, fmt.Errorf("неверный пароль"))
 		return "", fmt.Errorf("неверный пароль")
 	}
 

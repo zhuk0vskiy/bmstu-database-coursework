@@ -1,13 +1,13 @@
 package impl
 
 import (
+	"context"
+	"fmt"
 	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model"
 	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/model/dto"
 	repositoryInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/repository/interface"
 	serviceInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/service/interface"
 	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/logger"
-	"context"
-	"fmt"
 )
 
 type InstrumentalistService struct {
@@ -48,7 +48,7 @@ func (s InstrumentalistService) GetByStudio(request *dto.GetInstrumentalistByStu
 }
 
 func (s InstrumentalistService) Get(request *dto.GetInstrumentalistRequest) (instrumentalist *model.Instrumentalist, err error) {
-	if request.Id < 1 {
+	if request.Id < 0 {
 		s.logger.Infof("ошибка get instrumentalist by id: %s", fmt.Errorf("неверный id: %w", err))
 		return nil, fmt.Errorf("неверный id: %w", err)
 	}
