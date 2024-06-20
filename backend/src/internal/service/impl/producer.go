@@ -48,7 +48,7 @@ func (s ProducerService) GetByStudio(request *dto.GetProducerByStudioRequest) (p
 
 func (s ProducerService) Get(request *dto.GetProducerRequest) (producer *model.Producer, err error) {
 	if request.Id < 0 {
-		s.logger.Infof("ошибка get producer by id: %s", fmt.Errorf("неверный id: %w", err))
+		//s.logger.Infof("ошибка get producer by id: %s", fmt.Errorf("неверный id: %w", err))
 		return nil, fmt.Errorf("неверный id: %w", err)
 	}
 
