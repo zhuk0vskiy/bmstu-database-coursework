@@ -48,8 +48,8 @@ func (s InstrumentalistService) GetByStudio(request *dto.GetInstrumentalistByStu
 }
 
 func (s InstrumentalistService) Get(request *dto.GetInstrumentalistRequest) (instrumentalist *model.Instrumentalist, err error) {
-	if request.Id < 0 {
-		s.logger.Infof("ошибка get instrumentalist by id: %s", fmt.Errorf("неверный id: %w", err))
+	if request.Id < 1 {
+		//s.logger.Infof("ошибка get instrumentalist by id: %s", fmt.Errorf("неверный id: %w", err))
 		return nil, fmt.Errorf("неверный id: %w", err)
 	}
 
