@@ -326,6 +326,7 @@ func (tui *Tui) GetReservesPage(form *tview.Form, pages *tview.Pages) *tview.For
 		errorTextView.SetText(err.Error())
 		tui.ErrorForm(errorForm, pages, errorTextView, AuthorizedPage)
 		pages.SwitchToPage(ErrorPage)
+		return form
 	}
 
 	reserves, err := tui.app.UserSvc.GetReserves(&dto.GetUserReservesRequest{
@@ -2146,6 +2147,7 @@ func (tui *Tui) UpdateUserPage(form *tview.Form, pages *tview.Pages) *tview.Form
 		errorTextView.SetText(err.Error())
 		tui.ErrorForm(errorForm, pages, errorTextView, DeleteReservePage)
 		pages.SwitchToPage(ErrorPage)
+		return form
 	}
 	var login string
 	tmpStr := fmt.Sprintf("Введите новый логин (%s):", user.Login)
