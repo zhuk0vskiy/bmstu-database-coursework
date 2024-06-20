@@ -95,7 +95,7 @@ func (s AuthService) LogIn(request *dto.LogInRequest) (token string, err error) 
 		Login: request.Login,
 	})
 	if err != nil {
-		s.logger.Infof("ошибка при входе пользователя %s: %s", request.Login, err.Error())
+		s.logger.Errorf("ошибка при входе пользователя %s: %s", request.Login, err.Error())
 		return "", fmt.Errorf("получение пользователя по login: %w", err) // FIXME: invalid_username
 	}
 
