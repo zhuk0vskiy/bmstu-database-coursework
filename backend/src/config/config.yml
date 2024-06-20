@@ -10,5 +10,5 @@ database:
     driver: 'postgres'
 
 logger:
-  level: 'info'
+  level: 'error'
   file: 'out.log'
