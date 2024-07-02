@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  prometheus:
+    image: quay.io/prometheus/prometheus:latest
+    ports:
+      - '9090:9090'
+    volumes:
+      - './prometheus/prometheus.yml:/etc/prometheus/prometheus.yml'
+  app:
+    image:
