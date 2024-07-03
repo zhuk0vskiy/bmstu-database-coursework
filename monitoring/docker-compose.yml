@@ -1,4 +1,4 @@
-version: "3.9"
+# version: "3.9"
 services:
   prometheus:
     image: quay.io/prometheus/prometheus:latest
@@ -7,4 +7,7 @@ services:
     volumes:
       - './prometheus/prometheus.yml:/etc/prometheus/prometheus.yml'
   app:
-    image:
+    image: prometheus_check
+    ports:
+      - '8081:8081'
+

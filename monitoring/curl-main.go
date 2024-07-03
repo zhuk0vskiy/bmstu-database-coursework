@@ -40,8 +40,6 @@ func main() {
 		}
 	}()
 
-	prometheus.MustRegister(usersOnline)
-
 	http.Handle("/metrics", promhttp.Handler())
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8086", nil)
 }
