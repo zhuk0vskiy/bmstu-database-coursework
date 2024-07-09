@@ -36,6 +36,8 @@ func main() {
 
 	l := logger.New(c.Logger.Level, loggerFile)
 
+	m := prometh
+
 	db, err := newConn(ctx, &c.Database)
 	if err != nil {
 		l.Fatalf("failed to connect to database: %v", err)

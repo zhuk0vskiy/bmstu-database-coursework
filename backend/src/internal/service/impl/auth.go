@@ -7,6 +7,7 @@ import (
 	repositoryInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/repository/interface"
 	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/base"
 	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/logger"
+	monitorInterface "backend/monitoring/prometheus/interface"
 )
 
 type AuthService struct {
@@ -14,14 +15,20 @@ type AuthService struct {
 	crypto   base.IHashCrypto
 	jwtKey   string
 	logger   logger.Interface
+	monitor  monitorInterface.IMonitorService
 }
 
-func NewAuthService(logger logger.Interface, repo repositoryInterface.IUserRepository, crypto base.IHashCrypto, jwtKey string) *AuthService {
+func NewAuthService(logger logger.Interface,
+	repo repositoryInterface.IUserRepository,
+	crypto base.IHashCrypto,
+	jwtKey string,
+	monitor monitorInterface.IMonitorService) *AuthService {
 	return &AuthService{
 		logger:   logger,
 		userRepo: repo,
 		crypto:   crypto,
 		jwtKey:   jwtKey,
+		monitor:  monitor,
 	}
 }
 
@@ -75,6 +82,7 @@ func (s AuthService) SignIn(request *dto.SignInRequest) (err error) {
 		return fmt.Errorf("регистрация пользователя: %w", err)
 	}
 	s.logger.Infof("пользователь %s зарегистрировался", request.Login)
+	monitor.IncUsersOnline()
 
 	return err
 }
