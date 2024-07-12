@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/config"
 	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/logger"
 	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/tui"
@@ -36,7 +37,7 @@ func main() {
 
 	l := logger.New(c.Logger.Level, loggerFile)
 
-	m := prometh
+	m = prometheus.NewGauge()
 
 	db, err := newConn(ctx, &c.Database)
 	if err != nil {
