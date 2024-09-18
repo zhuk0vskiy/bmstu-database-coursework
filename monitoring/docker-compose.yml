@@ -1,13 +1,21 @@
-# version: "3.9"
 services:
+
   prometheus:
     image: quay.io/prometheus/prometheus:latest
+    container_name: prometheus
     ports:
       - '9090:9090'
     volumes:
-      - './prometheus/prometheus.yml:/etc/prometheus/prometheus.yml'
-  app:
-    image: prometheus_check
-    ports:
-      - '8081:8081'
+      - './prometheus.yml:/etc/prometheus/prometheus.yml'
+#    extra_hosts:
+#      - "host.docker.internal:host-gateway"
+    environment:
+      MONITORING_URL: localhost:8080
 
+  monitoring_app:
+    image: monitoring-app
+    container_name: monitoring-app
+    ports:
+      - "8080:8080"
+    environment:
+      MONITORING_URL: ${MONITORING_URL}

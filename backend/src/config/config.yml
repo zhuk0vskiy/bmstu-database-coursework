@@ -10,5 +10,8 @@ database:
     driver: 'postgres'
 
 logger:
-  level: 'error'
+  level: 'info'
   file: 'out.log'
+
+monitoring:
+  url: 'http://localhost:8080/monitoring'

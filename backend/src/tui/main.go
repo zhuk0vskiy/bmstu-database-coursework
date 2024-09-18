@@ -12,6 +12,7 @@ import (
 	serviceInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/service/interface"
 	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/base"
 	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/logger"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/monitoring"
 	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/time_parser"
 	"log"
 	"strconv"
@@ -31,7 +32,7 @@ type App struct {
 	Config             config.Config
 }
 
-func NewApp(db *pgxpool.Pool, cfg *config.Config, logger logger.Interface) *App {
+func NewApp(db *pgxpool.Pool, cfg *config.Config, logger logger.Interface, monitoring *monitoring.Client) *App {
 	//authRepo := postgresql.NewA
 	userRepo := postgresql.NewUserRepository(db)
 	studioRepo := postgresql.NewStudioRepository(db)
@@ -43,14 +44,14 @@ func NewApp(db *pgxpool.Pool, cfg *config.Config, logger logger.Interface) *App 
 
 	crypto := base.NewHashCrypto()
 
-	authSvc := serviceImpl.NewAuthService(logger, userRepo, crypto, cfg.JwtKey)
+	authSvc := serviceImpl.NewAuthService(logger, userRepo, crypto, cfg.JwtKey, monitoring)
 	userSvc := serviceImpl.NewUserService(logger, userRepo, reserveRepo, crypto)
 	studioSvc := serviceImpl.NewStudioService(logger, studioRepo)
 	roomSvc := serviceImpl.NewRoomService(roomRepo, reserveRepo)
 	producerSvc := serviceImpl.NewProducerService(logger, producerRepo, reserveRepo)
 	instrumentalistSvc := serviceImpl.NewInstrumentalistService(logger, instrumentalistRepo, reserveRepo)
 	equipmentSvc := serviceImpl.NewEquipmentService(logger, equipmentRepo, reserveRepo)
-	reserveSvc := serviceImpl.NewReserveService(logger, reserveRepo)
+	reserveSvc := serviceImpl.NewReserveService(logger, reserveRepo, monitoring)
 	validateTimeSvc := serviceImpl.NewValidateTimeService(logger, roomRepo, equipmentRepo, producerRepo, instrumentalistRepo, reserveRepo)
 
 	return &App{
@@ -120,9 +121,9 @@ const (
 	AuthorizedAdmin  = "admin"
 )
 
-func Run(db *pgxpool.Pool, cfg *config.Config, logger logger.Interface) *tview.Application {
+func Run(db *pgxpool.Pool, cfg *config.Config, logger logger.Interface, monitoring *monitoring.Client) *tview.Application {
 	var tui Tui
-	tui.app = NewApp(db, cfg, logger)
+	tui.app = NewApp(db, cfg, logger, monitoring)
 	tui.userInfo = new(base.JwtPayload)
 	tui.userInfo.Role = UnauthorizedUser
 
@@ -205,6 +206,7 @@ func (tui *Tui) CreateGuestMenu(form *tview.Form, pages *tview.Pages, exitFunc *
 		}).
 		AddItem("Выход", "", '0', func() {
 			exitFunc.Stop()
+
 		})
 }
 

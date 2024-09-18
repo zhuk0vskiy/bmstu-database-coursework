@@ -1,0 +1,13 @@
+# version: "3.9"
+services:
+  prometheus:
+    image: quay.io/monitoring/monitoring:latest
+    ports:
+      - '9090:9090'
+    volumes:
+      - './monitoring/monitoring.yml:/etc/monitoring/monitoring.yml'
+  app:
+    image: prometheus_check
+    ports:
+      - '8080:8080'
+

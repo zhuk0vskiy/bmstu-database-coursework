@@ -1,6 +1,12 @@
 FROM golang:1.22
+
 WORKDIR /app
-COPY go.mod ./
-COPY go.sum ./
-COPY main.go ./
-CMD [ "go", "run", "./main.go" ]
+
+ENV MONITORING_URL ${MONITORING_URL}
+
+COPY monitoring_app.go monitoring_app.go
+COPY go.mod go.mod
+
+RUN go mod tidy
+
+CMD ["go", "run", "monitoring_app.go"]

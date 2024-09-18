@@ -7,28 +7,28 @@ import (
 	repositoryInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/repository/interface"
 	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/base"
 	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/logger"
-	monitorInterface "backend/monitoring/prometheus/interface"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/monitoring"
 )
 
 type AuthService struct {
-	userRepo repositoryInterface.IUserRepository
-	crypto   base.IHashCrypto
-	jwtKey   string
-	logger   logger.Interface
-	monitor  monitorInterface.IMonitorService
+	userRepo   repositoryInterface.IUserRepository
+	crypto     base.IHashCrypto
+	jwtKey     string
+	logger     logger.Interface
+	monitoring *monitoring.Client
 }
 
 func NewAuthService(logger logger.Interface,
 	repo repositoryInterface.IUserRepository,
 	crypto base.IHashCrypto,
 	jwtKey string,
-	monitor monitorInterface.IMonitorService) *AuthService {
+	monitoring *monitoring.Client) *AuthService {
 	return &AuthService{
-		logger:   logger,
-		userRepo: repo,
-		crypto:   crypto,
-		jwtKey:   jwtKey,
-		monitor:  monitor,
+		logger:     logger,
+		userRepo:   repo,
+		crypto:     crypto,
+		jwtKey:     jwtKey,
+		monitoring: monitoring,
 	}
 }
 
@@ -82,7 +82,10 @@ func (s AuthService) SignIn(request *dto.SignInRequest) (err error) {
 		return fmt.Errorf("регистрация пользователя: %w", err)
 	}
 	s.logger.Infof("пользователь %s зарегистрировался", request.Login)
-	monitor.IncUsersOnline()
+	//err = s.monitoring.IncUsersSingUp()
+	//if err != nil {
+	//	return err
+	//}
 
 	return err
 }
@@ -120,6 +123,10 @@ func (s AuthService) LogIn(request *dto.LogInRequest) (token string, err error) 
 	}
 
 	s.logger.Infof("пользователь %s вошел", request.Login)
+	//err = s.monitoring.IncUsersOnline()
+	//if err != nil {
+	//	return "", err
+	//}
 
 	return token, err
 }

@@ -11,9 +11,9 @@ import (
 type metrics struct {
 }
 
-//func NewMetrics(reg prometheus.Registerer) *metrics {
+//func NewMetrics(reg monitoring.Registerer) *metrics {
 //	m := &metrics{
-//		devices: prometheus.NewGauge(prometheus.GaugeOpts{
+//		devices: monitoring.NewGauge(monitoring.GaugeOpts{
 //			Namespace: "myapp",
 //			Name:      "connected_devices",
 //			Help:      "Number of currently connected devices.",

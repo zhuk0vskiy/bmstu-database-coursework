@@ -7,10 +7,11 @@ import (
 const configPath = "backend/src/config/config.yml"
 
 type Config struct {
-	Logger   LoggerConfig   `yaml:"logger"`
-	HTTP     HTTPConfig     `yaml:"http"`
-	Database DatabaseConfig `yaml:"database"`
-	JwtKey   string         `yaml:"jwt-key"`
+	Logger     LoggerConfig     `yaml:"logger"`
+	HTTP       HTTPConfig       `yaml:"http"`
+	Database   DatabaseConfig   `yaml:"database"`
+	JwtKey     string           `yaml:"jwt-key"`
+	Monitoring MonitoringConfig `yaml:"monitoring"`
 }
 
 type LoggerConfig struct {
@@ -24,6 +25,10 @@ type HTTPConfig struct {
 
 type DatabaseConfig struct {
 	Postgres PostgresConfig
+}
+
+type MonitoringConfig struct {
+	Url string `yaml:"url"`
 }
 
 type PostgresConfig struct {

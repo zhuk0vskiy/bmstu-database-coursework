@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/prometheus/client_golang/prometheus"
 	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/config"
 	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/logger"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/monitoring"
 	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/tui"
 	"log"
 	"os"
@@ -36,16 +36,26 @@ func main() {
 	}(loggerFile)
 
 	l := logger.New(c.Logger.Level, loggerFile)
-
-	m = prometheus.NewGauge()
+	m := monitoring.New(c.Monitoring.Url)
 
 	db, err := newConn(ctx, &c.Database)
 	if err != nil {
 		l.Fatalf("failed to connect to database: %v", err)
 	}
-	fmt.Println(1)
 
-	tui.Run(db, c, l)
+	//atexit.Register(func() {
+	//	_ = monitoring.DecUsersOnline()
+	//})
+	//atexit.Exit()
+	//atexit.Fatal()
+	err = m.IncUsersOnline()
+	if err != nil {
+		l.Errorf("failed to increment users online: %v", err)
+	}
+	defer func() {
+		_ = m.DecUsersOnline()
+	}()
+	tui.Run(db, c, l, m)
 }
 
 func newConn(ctx context.Context, cfg *config.DatabaseConfig) (pool *pgxpool.Pool, err error) {

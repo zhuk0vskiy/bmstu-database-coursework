@@ -8,19 +8,23 @@ import (
 	repositoryInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/repository/interface"
 	serviceInterface "github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/internal/service/interface"
 	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/logger"
+	"github.com/zhuk0vskiy/bmstu-database-coursework/backend/src/pkg/monitoring"
 )
 
 type ReserveService struct {
 	reserveRepo repositoryInterface.IReserveRepository
 	logger      logger.Interface
+	monitoring  *monitoring.Client
 }
 
 func NewReserveService(
 	logger logger.Interface,
-	reserveRepo repositoryInterface.IReserveRepository) serviceInterface.IReserveService {
+	reserveRepo repositoryInterface.IReserveRepository,
+	monitoring *monitoring.Client) serviceInterface.IReserveService {
 	return &ReserveService{
 		logger:      logger,
 		reserveRepo: reserveRepo,
+		monitoring:  monitoring,
 	}
 }
 
@@ -97,6 +101,10 @@ func (s ReserveService) Add(request *dto.AddReserveRequest) (err error) {
 		request.InstrumentalistId,
 	)
 
+	err = s.monitoring.IncCurrentReserves()
+	if err != nil {
+		return err
+	}
 	return err
 }
 
@@ -118,6 +126,9 @@ func (s ReserveService) Delete(request *dto.DeleteReserveRequest) (err error) {
 	}
 
 	s.logger.Infof("удаление брони %d", request.Id)
-
+	err = s.monitoring.DecCurrentReserves()
+	if err != nil {
+		return err
+	}
 	return err
 }
